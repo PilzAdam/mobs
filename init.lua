@@ -11,6 +11,7 @@ function mobs:register_monster(name, def)
 		view_range = def.view_range,
 		walk_velocity = def.walk_velocity,
 		run_velocity = def.run_velocity,
+		damage = def.damage,
 		
 		timer = 0,
 		attack = {player=nil, dist=nil},
@@ -153,12 +154,28 @@ function mobs:register_monster(name, def)
 					self.v_start = false
 					if self.timer > 1 then
 						self.timer = 0
-						self.attack.player:punch(self.object, 1.0,  {
-							full_punch_interval=1.0,
-							groupcaps={
-								fleshy={times={[2]=1/1,[3]=1/2}},
-							}
-						}, vec)
+						if damage > 3 then
+							self.attack.player:punch(self.object, 1.0,  {
+								full_punch_interval=1.0,
+								groupcaps={
+									fleshy={times={[1]=1/(damage-2),[2]=1/(damage-1),[3]=1/damage}},
+								}
+							}, vec)
+						elseif damage > 2 then
+							self.attack.player:punch(self.object, 1.0,  {
+								full_punch_interval=1.0,
+								groupcaps={
+									fleshy={times={[2]=1/(damage-1),[3]=1/damage}},
+								}
+							}, vec)
+						elseif damage > 1 then
+							self.attack.player:punch(self.object, 1.0,  {
+								full_punch_interval=1.0,
+								groupcaps={
+									fleshy={times={[3]=1/damage}},
+								}
+							}, vec)
+						end
 					end
 				end
 			end
@@ -212,6 +229,7 @@ mobs:register_monster("mobs:dirt_monster", {
 	view_range = 15,
 	walk_velocity = 1,
 	run_velocity = 3,
+	damage = 2,
 })
 
 minetest.register_abm({
@@ -246,6 +264,7 @@ mobs:register_monster("mobs:stone_monster", {
 	view_range = 10,
 	walk_velocity = 0.5,
 	run_velocity = 2,
+	damage = 3,
 })
 
 minetest.register_abm({
@@ -269,5 +288,43 @@ minetest.register_abm({
 			return
 		end
 		minetest.env:add_entity(pos, "mobs:stone_monster")
+	end
+})
+
+mobs:register_monster("mobs:sand_monster", {
+	hp_max = 5,
+	physical = true,
+	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
+	visual = "upright_sprite",
+	visual_size = {x=1, y=2},
+	textures = {"mobs_sand_monster.png", "mobs_sand_monster_back.png"},
+	makes_footstep_sound = true,
+	view_range = 15,
+	walk_velocity = 1.5,
+	run_velocity = 4,
+	damage = 1,
+})
+
+minetest.register_abm({
+	nodenames = {"default:desert_sand"},
+	neighbors = {"default:desert_sand", "default:desert_stone"},
+	interval = 60,
+	chance = 5000,
+	action = function(pos, node)
+		pos.y = pos.y+1
+		if not minetest.env:get_node_light(pos) then
+			return
+		end
+		if minetest.env:get_node_light(pos) > 3 then
+			return
+		end
+		if minetest.env:get_node(pos).name ~= "air" then
+			return
+		end
+		pos.y = pos.y+1
+		if minetest.env:get_node(pos).name ~= "air" then
+			return
+		end
+		minetest.env:add_entity(pos, "mobs:sand_monster")
 	end
 })
