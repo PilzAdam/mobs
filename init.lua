@@ -12,6 +12,8 @@ function mobs:register_monster(name, def)
 		walk_velocity = def.walk_velocity,
 		run_velocity = def.run_velocity,
 		damage = def.damage,
+		light_resistant = def.light_resistant,
+		drop = def.drop,
 		
 		timer = 0,
 		attack = {player=nil, dist=nil},
@@ -49,7 +51,7 @@ function mobs:register_monster(name, def)
 				self.timer = 0
 			end
 			
-			if minetest.env:get_timeofday() > 0.2 and minetest.env:get_timeofday() < 0.8 and minetest.env:get_node_light(self.object:getpos()) > 3 then
+			if not self.light_resistant and minetest.env:get_timeofday() > 0.2 and minetest.env:get_timeofday() < 0.8 and minetest.env:get_node_light(self.object:getpos()) > 3 then
 				self.object:punch(self.object, 1.0, {
 					full_punch_interval=1.0,
 					groupcaps={
@@ -154,25 +156,25 @@ function mobs:register_monster(name, def)
 					self.v_start = false
 					if self.timer > 1 then
 						self.timer = 0
-						if damage > 3 then
+						if self.damage > 3 then
 							self.attack.player:punch(self.object, 1.0,  {
 								full_punch_interval=1.0,
 								groupcaps={
-									fleshy={times={[1]=1/(damage-2),[2]=1/(damage-1),[3]=1/damage}},
+									fleshy={times={[1]=1/(self.damage-2),[2]=1/(self.damage-1),[3]=1/self.damage}},
 								}
 							}, vec)
-						elseif damage > 2 then
+						elseif self.damage > 2 then
 							self.attack.player:punch(self.object, 1.0,  {
 								full_punch_interval=1.0,
 								groupcaps={
-									fleshy={times={[2]=1/(damage-1),[3]=1/damage}},
+									fleshy={times={[2]=1/(self.damage-1),[3]=1/self.damage}},
 								}
 							}, vec)
-						elseif damage > 1 then
+						elseif self.damage > 1 then
 							self.attack.player:punch(self.object, 1.0,  {
 								full_punch_interval=1.0,
 								groupcaps={
-									fleshy={times={[3]=1/damage}},
+									fleshy={times={[3]=1/self.damage}},
 								}
 							}, vec)
 						end
@@ -193,11 +195,11 @@ function mobs:register_monster(name, def)
 			if self.object:get_hp() <= 0 then
 				if hitter and hitter:is_player() and hitter:get_inventory() then
 					for i=1,math.random(0,3)+2 do
-						hitter:get_inventory():add_item("main", ItemStack("default:dirt"))
+						hitter:get_inventory():add_item("main", ItemStack(self.drop))
 					end
 				else
 					for i=1,math.random(0,3)+2 do
-						local obj = minetest.env:add_item(self.object:getpos(), "default:dirt")
+						local obj = minetest.env:add_item(self.object:getpos(), self.drop)
 						if obj then
 							obj:get_luaentity().collect = true
 							local x = math.random(1, 5)
@@ -230,6 +232,7 @@ mobs:register_monster("mobs:dirt_monster", {
 	walk_velocity = 1,
 	run_velocity = 3,
 	damage = 2,
+	drop = "default:dirt",
 })
 
 minetest.register_abm({
@@ -265,6 +268,7 @@ mobs:register_monster("mobs:stone_monster", {
 	walk_velocity = 0.5,
 	run_velocity = 2,
 	damage = 3,
+	drop = "default:mossycobble",
 })
 
 minetest.register_abm({
@@ -292,7 +296,7 @@ minetest.register_abm({
 })
 
 mobs:register_monster("mobs:sand_monster", {
-	hp_max = 5,
+	hp_max = 3,
 	physical = true,
 	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
 	visual = "upright_sprite",
@@ -303,6 +307,8 @@ mobs:register_monster("mobs:sand_monster", {
 	walk_velocity = 1.5,
 	run_velocity = 4,
 	damage = 1,
+	drop = "default:sand",
+	light_resistant = true,
 })
 
 minetest.register_abm({
@@ -312,12 +318,6 @@ minetest.register_abm({
 	chance = 5000,
 	action = function(pos, node)
 		pos.y = pos.y+1
-		if not minetest.env:get_node_light(pos) then
-			return
-		end
-		if minetest.env:get_node_light(pos) > 3 then
-			return
-		end
 		if minetest.env:get_node(pos).name ~= "air" then
 			return
 		end
