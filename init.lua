@@ -8,13 +8,15 @@ function mobs:register_monster(name, def)
 		visual_size = def.visual_size,
 		textures = def.textures,
 		makes_footstep_sound = def.makes_footstep_sound,
+		view_range = def.view_range,
+		walk_velocity = def.walk_velocity,
+		run_velocity = def.run_velocity,
 		
 		timer = 0,
 		attack = {player=nil, dist=nil},
 		state = "stand",
 		v_start = false,
 		
-		VIEW_RANGE = def.VIEW_RANGE,
 		
 		set_velocity = function(self, v)
 			local yaw = self.object:getyaw()
@@ -29,7 +31,6 @@ function mobs:register_monster(name, def)
 		end,
 		
 		on_step = function(self, dtime)
-			
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw()
 				local x = math.sin(yaw) * -2
@@ -78,7 +79,7 @@ function mobs:register_monster(name, def)
 				local s = self.object:getpos()
 				local p = player:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-				if dist < self.VIEW_RANGE then
+				if dist < self.view_range then
 					if self.attack.dist then
 						if self.attack.dist < dist then
 							self.state = "attack"
@@ -98,7 +99,7 @@ function mobs:register_monster(name, def)
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 				end
 				if math.random(1, 100) <= 50 then
-					self.set_velocity(self, 1)
+					self.set_velocity(self, self.walk_velocity)
 					self.state = "walk"
 				end
 			elseif self.state == "walk" then
@@ -119,7 +120,7 @@ function mobs:register_monster(name, def)
 				local s = self.object:getpos()
 				local p = self.attack.player:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-				if dist > self.VIEW_RANGE or self.attack.player:get_hp() <= 0 then
+				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
 					self.state = "stand"
 					self.v_start = false
 					self.set_velocity(self, 0)
@@ -138,14 +139,14 @@ function mobs:register_monster(name, def)
 				if self.attack.dist > 2 then
 					if not self.v_start then
 						self.v_start = true
-						self.set_velocity(self, 3)
+						self.set_velocity(self, self.run_velocity)
 					else
 						if self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 							local v = self.object:getvelocity()
 							v.y = 5
 							self.object:setvelocity(v)
 						end
-						self.set_velocity(self, 3)
+						self.set_velocity(self, self.run_velocity)
 					end
 				else
 					self.set_velocity(self, 0)
@@ -208,7 +209,9 @@ mobs:register_monster("mobs:dirt_monster", {
 	visual_size = {x=1, y=2},
 	textures = {"mobs_dirt_monster.png", "mobs_dirt_monster_back.png"},
 	makes_footstep_sound = true,
-	VIEW_RANGE = 15
+	view_range = 15,
+	walk_velocity = 1,
+	run_velocity = 3,
 })
 
 minetest.register_abm({
@@ -229,5 +232,42 @@ minetest.register_abm({
 			return
 		end
 		minetest.env:add_entity(pos, "mobs:dirt_monster")
+	end
+})
+
+mobs:register_monster("mobs:stone_monster", {
+	hp_max = 10,
+	physical = true,
+	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
+	visual = "upright_sprite",
+	visual_size = {x=1, y=2},
+	textures = {"mobs_stone_monster.png", "mobs_stone_monster_back.png"},
+	makes_footstep_sound = true,
+	view_range = 10,
+	walk_velocity = 0.5,
+	run_velocity = 2,
+})
+
+minetest.register_abm({
+	nodenames = {"default:stone"},
+	neighbors = {"default:stone"},
+	interval = 60,
+	chance = 5000,
+	action = function(pos, node)
+		pos.y = pos.y+1
+		if not minetest.env:get_node_light(pos) then
+			return
+		end
+		if minetest.env:get_node_light(pos) > 3 then
+			return
+		end
+		if minetest.env:get_node(pos).name ~= "air" then
+			return
+		end
+		pos.y = pos.y+1
+		if minetest.env:get_node(pos).name ~= "air" then
+			return
+		end
+		minetest.env:add_entity(pos, "mobs:stone_monster")
 	end
 })
