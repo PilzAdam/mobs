@@ -362,14 +362,19 @@ function mobs:register_spawn(name, nodes, max_light)
 		if minetest.env:get_node(pos).name ~= "air" then
 			return
 		end
-		if #minetest.env:get_objects_inside_radius(pos, 20) > 5 then
-			return
-		end
-		for _,obj in pairs(minetest.env:get_objects_inside_radius(pos, 20)) do
+		
+		local count = 0
+		for _,obj in pairs(minetest.env:get_objects_inside_radius(pos, 50)) do
 			if obj:is_player() then
 				return
+			elseif obj:get_luaentity().name == "__builtin:item" then
+				count = count+1
 			end
 		end
+		if count > 5 then
+			return
+		end
+		
 		--minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
 		minetest.env:add_entity(pos, name)
 	end
