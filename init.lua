@@ -15,7 +15,7 @@ function mobs:register_monster(name, def)
 		light_resistant = def.light_resistant,
 		drop = def.drop,
 		drop_count = def.drop_count,
-		armor = def.armor.
+		armor = def.armor,
 		
 		timer = 0,
 		attack = {player=nil, dist=nil},
@@ -370,7 +370,7 @@ function mobs:register_spawn(name, nodes, max_light)
 				return
 			end
 		end
-		minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
+		--minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
 		minetest.env:add_entity(pos, name)
 	end
 })
