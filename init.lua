@@ -406,6 +406,7 @@ mobs:register_monster("mobs:stone_monster", {
 	damage = 3,
 	drop = "default:mossycobble",
 	drop_count = 3,
+	light_resistant = true,
 })
 mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3)
 
