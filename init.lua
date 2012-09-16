@@ -2,7 +2,7 @@ local mobs = {}
 function mobs:register_monster(name, def)
 	minetest.register_entity(name, {
 		hp_max = def.hp_max,
-		physical = def.physical,
+		physical = true,
 		collisionbox = def.collisionbox,
 		visual = def.visual,
 		visual_size = def.visual_size,
@@ -225,7 +225,7 @@ end
 function mobs:register_animal(name, def)
 	minetest.register_entity(name, {
 		hp_max = def.hp_max,
-		physical = def.physical,
+		physical = true,
 		collisionbox = def.collisionbox,
 		visual = def.visual,
 		visual_size = def.visual_size,
@@ -383,7 +383,6 @@ end
 
 mobs:register_monster("mobs:dirt_monster", {
 	hp_max = 5,
-	physical = true,
 	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
 	visual = "upright_sprite",
 	visual_size = {x=1, y=2},
@@ -401,7 +400,6 @@ mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3)
 
 mobs:register_monster("mobs:stone_monster", {
 	hp_max = 10,
-	physical = true,
 	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
 	visual = "upright_sprite",
 	visual_size = {x=1, y=2},
@@ -421,7 +419,6 @@ mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3)
 
 mobs:register_monster("mobs:sand_monster", {
 	hp_max = 3,
-	physical = true,
 	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
 	visual = "upright_sprite",
 	visual_size = {x=1, y=2},
@@ -440,7 +437,6 @@ mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20)
 
 mobs:register_animal("mobs:sheep", {
 	hp_max = 5,
-	physical = true,
 	collisionbox = {-0.6, -0.625, -0.6, 0.6, 0.625, 0.6},
 	visual = "upright_sprite",
 	visual_size = {x=2, y=1.25},
