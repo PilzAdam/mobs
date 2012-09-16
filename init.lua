@@ -340,6 +340,41 @@ function mobs:register_animal(name, def)
 	})
 end
 
+function mobs:register_spawn(name, nodes, max_light)
+	minetest.register_abm({
+	nodenames = nodes,
+	neighbors = nodes,
+	interval = 60,
+	chance = 5000,
+	action = function(pos, node)
+		pos.y = pos.y+1
+		if not minetest.env:get_node_light(pos) then
+			return
+		end
+		if minetest.env:get_node_light(pos) > max_light then
+			return
+		end
+		if minetest.env:get_node(pos).name ~= "air" then
+			return
+		end
+		pos.y = pos.y+1
+		if minetest.env:get_node(pos).name ~= "air" then
+			return
+		end
+		if #minetest.env:get_objects_inside_radius(pos, 20) > 5 then
+			return
+		end
+		for _,obj in pairs(minetest.env:get_objects_inside_radius(pos, 20)) do
+			if obj:is_player() then
+				return
+			end
+		end
+		minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
+		minetest.env:add_entity(pos, name)
+	end
+})
+end
+
 mobs:register_monster("mobs:dirt_monster", {
 	hp_max = 5,
 	physical = true,
@@ -355,30 +390,7 @@ mobs:register_monster("mobs:dirt_monster", {
 	drop = "default:dirt",
 	drop_count = 3,
 })
-
-minetest.register_abm({
-	nodenames = {"default:dirt_with_grass"},
-	neighbors = {"default:dirt", "default:dirt_with_grass"},
-	interval = 60,
-	chance = 5000,
-	action = function(pos, node)
-		pos.y = pos.y+1
-		if not minetest.env:get_node_light(pos) then
-			return
-		end
-		if minetest.env:get_node_light(pos) > 3 then
-			return
-		end
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		pos.y = pos.y+1
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		minetest.env:add_entity(pos, "mobs:dirt_monster")
-	end
-})
+mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3)
 
 mobs:register_monster("mobs:stone_monster", {
 	hp_max = 10,
@@ -395,30 +407,8 @@ mobs:register_monster("mobs:stone_monster", {
 	drop = "default:mossycobble",
 	drop_count = 3,
 })
+mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3)
 
-minetest.register_abm({
-	nodenames = {"default:stone"},
-	neighbors = {"default:stone"},
-	interval = 60,
-	chance = 5000,
-	action = function(pos, node)
-		pos.y = pos.y+1
-		if not minetest.env:get_node_light(pos) then
-			return
-		end
-		if minetest.env:get_node_light(pos) > 3 then
-			return
-		end
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		pos.y = pos.y+1
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		minetest.env:add_entity(pos, "mobs:stone_monster")
-	end
-})
 
 mobs:register_monster("mobs:sand_monster", {
 	hp_max = 3,
@@ -436,24 +426,7 @@ mobs:register_monster("mobs:sand_monster", {
 	drop_count = 3,
 	light_resistant = true,
 })
-
-minetest.register_abm({
-	nodenames = {"default:desert_sand"},
-	neighbors = {"default:desert_sand", "default:desert_stone"},
-	interval = 60,
-	chance = 5000,
-	action = function(pos, node)
-		pos.y = pos.y+1
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		pos.y = pos.y+1
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		minetest.env:add_entity(pos, "mobs:sand_monster")
-	end
-})
+mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20)
 
 mobs:register_animal("mobs:sheep", {
 	hp_max = 5,
@@ -480,24 +453,7 @@ mobs:register_animal("mobs:sheep", {
 		end
 	end,
 })
-
-minetest.register_abm({
-	nodenames = {"default:dirt_with_grass"},
-	neighbors = {"default:dirt", "default:dirt_with_grass"},
-	interval = 60,
-	chance = 5000,
-	action = function(pos, node)
-		pos.y = pos.y+1
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		pos.y = pos.y+1
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		minetest.env:add_entity(pos, "mobs:sheep")
-	end
-})
+mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20)
 
 minetest.register_craftitem("mobs:meat_raw", {
 	description = "Raw Meat",
