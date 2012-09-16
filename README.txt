@@ -2,7 +2,7 @@
 by PilzAdam
 
 Inroduction:
-This mod adds some basic hostile mobs to the game.
+This mod adds some basic hostile and friendly mobs to the game.
 
 How to install:
 Unzip the archive an place it in minetest-base-directory/mods/minetest/
@@ -14,7 +14,16 @@ For further information or help see:
 http://wiki.minetest.com/wiki/Installing_Mods
 
 How to use the mod:
-Hide or get a sword.
+There are 3 hostile mobs that want to kill the player:
+- The dirt monster spawns at night on grass and get killed on day when
+  its too light.
+- The stone monster spawns on stone and is stronger but slower than the
+  dirt monster
+- The desert monster spawns in deserts and is faster but less strong
+  than the dirt monster
+There is also 1 friendly mob:
+- The sheep spawns on grass. You can get wool from it when you rightclick
+  it and meat if you kill it. Meat can bee cooked in the furnace to eat it.
 
 License:
 Sourcecode: WTFPL (see below)
