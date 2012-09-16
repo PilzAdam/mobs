@@ -15,6 +15,7 @@ function mobs:register_monster(name, def)
 		light_resistant = def.light_resistant,
 		drop = def.drop,
 		drop_count = def.drop_count,
+		armor = def.armor.
 		
 		timer = 0,
 		attack = {player=nil, dist=nil},
@@ -185,7 +186,7 @@ function mobs:register_monster(name, def)
 		end,
 		
 		on_activate = function(self, staticdata)
-			self.object:set_armor_groups({fleshy=3})
+			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y=-10, z=0})
 			self.state = "stand"
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
@@ -389,6 +390,7 @@ mobs:register_monster("mobs:dirt_monster", {
 	damage = 2,
 	drop = "default:dirt",
 	drop_count = 3,
+	armor = 3,
 })
 mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3)
 
@@ -407,6 +409,7 @@ mobs:register_monster("mobs:stone_monster", {
 	drop = "default:mossycobble",
 	drop_count = 3,
 	light_resistant = true,
+	armor = 2,
 })
 mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3)
 
@@ -426,6 +429,7 @@ mobs:register_monster("mobs:sand_monster", {
 	drop = "default:sand",
 	drop_count = 3,
 	light_resistant = true,
+	armor = 3,
 })
 mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20)
 
