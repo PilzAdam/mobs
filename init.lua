@@ -363,7 +363,7 @@ function mobs:register_spawn(name, nodes, max_light, min_light)
 		end
 		
 		local count = 0
-		for _,obj in pairs(minetest.env:get_objects_inside_radius(pos, 50)) do
+		for _,obj in pairs(minetest.env:get_objects_inside_radius(pos, 30)) do
 			if obj:is_player() then
 				return
 			elseif obj:get_luaentity().name == name then
