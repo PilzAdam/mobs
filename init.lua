@@ -337,7 +337,7 @@ function mobs:register_animal(name, def)
 	})
 end
 
-function mobs:register_spawn(name, nodes, max_light)
+function mobs:register_spawn(name, nodes, max_light, min_light)
 	minetest.register_abm({
 	nodenames = nodes,
 	neighbors = nodes,
@@ -349,6 +349,9 @@ function mobs:register_spawn(name, nodes, max_light)
 			return
 		end
 		if minetest.env:get_node_light(pos) > max_light then
+			return
+		end
+		if minetest.env:get_node_light(pos) < min_light then
 			return
 		end
 		if minetest.env:get_node(pos).name ~= "air" then
@@ -392,7 +395,7 @@ mobs:register_monster("mobs:dirt_monster", {
 	drop_count = 3,
 	armor = 3,
 })
-mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3)
+mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3, -1)
 
 mobs:register_monster("mobs:stone_monster", {
 	hp_max = 10,
@@ -410,7 +413,7 @@ mobs:register_monster("mobs:stone_monster", {
 	light_resistant = true,
 	armor = 2,
 })
-mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3)
+mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1)
 
 
 mobs:register_monster("mobs:sand_monster", {
@@ -429,7 +432,7 @@ mobs:register_monster("mobs:sand_monster", {
 	light_resistant = true,
 	armor = 3,
 })
-mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20)
+mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20, -1)
 
 mobs:register_animal("mobs:sheep", {
 	hp_max = 5,
@@ -455,7 +458,7 @@ mobs:register_animal("mobs:sheep", {
 		end
 	end,
 })
-mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20)
+mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20, 8)
 
 minetest.register_craftitem("mobs:meat_raw", {
 	description = "Raw Meat",
