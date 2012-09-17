@@ -158,28 +158,24 @@ function mobs:register_monster(name, def)
 					self.v_start = false
 					if self.timer > 1 then
 						self.timer = 0
-						if self.damage > 3 then
-							self.attack.player:punch(self.object, 1.0,  {
-								full_punch_interval=1.0,
-								groupcaps={
-									fleshy={times={[1]=1/(self.damage-2),[2]=1/(self.damage-1),[3]=1/self.damage}},
-								}
-							}, vec)
-						elseif self.damage > 2 then
-							self.attack.player:punch(self.object, 1.0,  {
-								full_punch_interval=1.0,
-								groupcaps={
-									fleshy={times={[2]=1/(self.damage-1),[3]=1/self.damage}},
-								}
-							}, vec)
-						elseif self.damage > 1 then
-							self.attack.player:punch(self.object, 1.0,  {
-								full_punch_interval=1.0,
-								groupcaps={
-									fleshy={times={[3]=1/self.damage}},
-								}
-							}, vec)
+						local d1 = 10
+						local d2 = 10
+						local d3 = 10
+						if self.damage > 0 then
+							d3 = 1/self.damage
 						end
+						if self.damage > 1 then
+							d2 = 1/(self.damage-1)
+						end
+						if self.damage > 2 then
+							d1 = 1/(self.damage-2)
+						end
+						self.attack.player:punch(self.object, 1.0,  {
+							full_punch_interval=1.0,
+							groupcaps={
+								fleshy={times={[1]=d1, [2]=d2, [3]=d3}},
+							}
+						}, vec)
 					end
 				end
 			end
