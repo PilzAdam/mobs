@@ -389,7 +389,9 @@ function mobs:register_spawn(name, nodes, max_light, min_light)
 			return
 		end
 		
-		--minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
+		if minetest.setting_getbool("display_mob_spawn") then
+			minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
+		end
 		minetest.env:add_entity(pos, name)
 	end
 })
