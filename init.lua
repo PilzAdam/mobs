@@ -16,6 +16,7 @@ function mobs:register_monster(name, def)
 		drop = def.drop,
 		drop_count = def.drop_count,
 		armor = def.armor,
+		drawtype = def.drawtype,
 		
 		timer = 0,
 		attack = {player=nil, dist=nil},
@@ -25,6 +26,9 @@ function mobs:register_monster(name, def)
 		
 		set_velocity = function(self, v)
 			local yaw = self.object:getyaw()
+			if self.drawtype == "side" then
+				yaw = yaw+(math.pi/2)
+			end
 			local x = math.sin(yaw) * -v
 			local z = math.cos(yaw) * v
 			self.object:setvelocity({x=x, y=self.object:getvelocity().y, z=z})
@@ -38,6 +42,9 @@ function mobs:register_monster(name, def)
 		on_step = function(self, dtime)
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw()
+				if self.drawtype == "side" then
+					yaw = yaw+(math.pi/2)
+				end
 				local x = math.sin(yaw) * -2
 				local z = math.cos(yaw) * 2
 				self.object:setacceleration({x=x, y=-10, z=z})
@@ -137,6 +144,9 @@ function mobs:register_monster(name, def)
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
+				if self.drawtype == "side" then
+					yaw = yaw+(math.pi/2)
+				end
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -231,6 +241,7 @@ function mobs:register_animal(name, def)
 		drop = def.drop,
 		on_rightclick = def.on_rightclick,
 		drop_count = def.drop_count,
+		drawtype = def.drawtype,
 		
 		timer = 0,
 		state = "stand",
@@ -238,7 +249,9 @@ function mobs:register_animal(name, def)
 		
 		set_velocity = function(self, v)
 			local yaw = self.object:getyaw()
-			yaw = yaw+(math.pi/2)
+			if self.drawtype == "side" then
+				yaw = yaw+(math.pi/2)
+			end
 			local x = math.sin(yaw) * -v
 			local z = math.cos(yaw) * v
 			self.object:setvelocity({x=x, y=self.object:getvelocity().y, z=z})
@@ -252,7 +265,9 @@ function mobs:register_animal(name, def)
 		on_step = function(self, dtime)
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw()
-				yaw = yaw+(math.pi/2)
+				if self.drawtype == "side" then
+					yaw = yaw+(math.pi/2)
+				end
 				local x = math.sin(yaw) * -2
 				local z = math.cos(yaw) * 2
 				self.object:setacceleration({x=x, y=-10, z=z})
@@ -394,6 +409,7 @@ mobs:register_monster("mobs:dirt_monster", {
 	drop = "default:dirt",
 	drop_count = 3,
 	armor = 3,
+	drawtype = "front",
 })
 mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3, -1)
 
@@ -412,6 +428,7 @@ mobs:register_monster("mobs:stone_monster", {
 	drop_count = 3,
 	light_resistant = true,
 	armor = 2,
+	drawtype = "front",
 })
 mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1)
 
@@ -431,6 +448,7 @@ mobs:register_monster("mobs:sand_monster", {
 	drop_count = 3,
 	light_resistant = true,
 	armor = 3,
+	drawtype = "front",
 })
 mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20, -1)
 
@@ -444,6 +462,7 @@ mobs:register_animal("mobs:sheep", {
 	walk_velocity = 1,
 	drop = "mobs:meat_raw",
 	drop_count = 2,
+	drawtype = "side",
 	
 	on_rightclick = function(self, clicker)
 		if self.naked then
