@@ -52,16 +52,16 @@ This mod add some functions that you can use in other mods:
 	This adds a animal to Minetest that will just walk arround
 	"name" is the name of the monster ("[modname]:[animalname]")
 	"def" is the same table as in register_monster but without these values:
-		view_range
-		run_velocity
-		damage
-		light_resistant
-		armor
-	and it also has the field
-		on_rightclick: its same as in minetest.register_entity()
+		-view_range
+		-run_velocity
+		-damage
+		-light_resistant
+		-armor
+		and it also has the field
+		-on_rightclick: its same as in minetest.register_entity()
 3. mobs:register_spawn(name, nodes, max_light, min_light)
 	This function adds the spawning of an animal (without it the
-		registered animals and monster wont spawn!)
+		registered animals and monster won't spawn!)
 	"name" is the name of the animal/monster
 	"nodes" is a list of nodenames on that the animal/monster can spawn
 	"max_light" is the maximum of light
