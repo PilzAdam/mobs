@@ -62,31 +62,39 @@ function mobs:register_monster(name, def)
 				self.timer = 0
 			end
 			
-			if not self.light_resistant and minetest.env:get_timeofday() > 0.2 and minetest.env:get_timeofday() < 0.8 and minetest.env:get_node_light(self.object:getpos()) > 3 then
-				self.object:punch(self.object, 1.0, {
-					full_punch_interval=1.0,
-					groupcaps={
-						fleshy={times={[3]=1/10}},
-					}
-				}, nil)
+			local do_env_damage = function(self)
+				if not self.light_resistant and minetest.env:get_timeofday() > 0.2 and minetest.env:get_timeofday() < 0.8 and minetest.env:get_node_light(self.object:getpos()) > 3 then
+					self.object:punch(self.object, 1.0, {
+						full_punch_interval=1.0,
+						groupcaps={
+							fleshy={times={[3]=1/10}},
+						}
+					}, nil)
+				end
+				
+				if self.water_damage and self.water_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:water") then
+					self.object:punch(self.object, 1.0, {
+						full_punch_interval=1.0,
+						groupcaps={
+							fleshy={times={[self.armor]=1/self.water_damage}},
+						}
+					}, nil)
+				end
+				
+				if self.lava_damage and self.lava_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:lava") then
+					self.object:punch(self.object, 1.0, {
+						full_punch_interval=1.0,
+						groupcaps={
+							fleshy={times={[self.armor]=1/self.lava_damage}},
+						}
+					}, nil)
+				end
 			end
 			
-			if self.water_damage and self.water_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:water") then
-				self.object:punch(self.object, 1.0, {
-					full_punch_interval=1.0,
-					groupcaps={
-						fleshy={times={[self.armor]=1/self.water_damage}},
-					}
-				}, nil)
-			end
-			
-			if self.lava_damage and self.lava_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:lava") then
-				self.object:punch(self.object, 1.0, {
-					full_punch_interval=1.0,
-					groupcaps={
-						fleshy={times={[self.armor]=1/self.lava_damage}},
-					}
-				}, nil)
+			if self.state == "attack" and self.timer > 1 then
+				do_env_damage(self)
+			elseif self.state ~= "attack" then
+				do_env_damage(self)
 			end
 			
 			for _,player in pairs(minetest.get_connected_players()) do
