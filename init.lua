@@ -352,12 +352,12 @@ function mobs:register_animal(name, def)
 	})
 end
 
-function mobs:register_spawn(name, nodes, max_light, min_light)
+function mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per_30_block_radius)
 	minetest.register_abm({
 	nodenames = nodes,
 	neighbors = nodes,
 	interval = 30,
-	chance = 5000,
+	chance = chance,
 	action = function(pos, node)
 		pos.y = pos.y+1
 		if not minetest.env:get_node_light(pos) then
@@ -385,7 +385,7 @@ function mobs:register_spawn(name, nodes, max_light, min_light)
 				count = count+1
 			end
 		end
-		if count > 5 then
+		if count > mobs_per_30_block_radius then
 			return
 		end
 		
@@ -413,7 +413,7 @@ mobs:register_monster("mobs:dirt_monster", {
 	armor = 3,
 	drawtype = "front",
 })
-mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3, -1)
+mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 5000, 5)
 
 mobs:register_monster("mobs:stone_monster", {
 	hp_max = 10,
@@ -432,7 +432,7 @@ mobs:register_monster("mobs:stone_monster", {
 	armor = 2,
 	drawtype = "front",
 })
-mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1)
+mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1, 5000, 5)
 
 
 mobs:register_monster("mobs:sand_monster", {
@@ -452,7 +452,7 @@ mobs:register_monster("mobs:sand_monster", {
 	armor = 3,
 	drawtype = "front",
 })
-mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20, -1)
+mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20, -1, 5000, 5)
 
 mobs:register_animal("mobs:sheep", {
 	hp_max = 5,
@@ -479,7 +479,7 @@ mobs:register_animal("mobs:sheep", {
 		end
 	end,
 })
-mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20, 8)
+mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20, 8, 5000, 3)
 
 minetest.register_craftitem("mobs:meat_raw", {
 	description = "Raw Meat",
@@ -518,7 +518,7 @@ mobs:register_animal("mobs:rat", {
 		end
 	end,
 })
-mobs:register_spawn("mobs:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1)
+mobs:register_spawn("mobs:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 5000, 1)
 
 minetest.register_craftitem("mobs:rat", {
 	description = "Rat",
@@ -564,4 +564,4 @@ mobs:register_monster("mobs:oerkki", {
 	drawtype = "front",
 	light_resistant = true,
 })
-mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1)
+mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1, 5000, 5)

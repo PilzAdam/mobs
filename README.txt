@@ -63,13 +63,16 @@ This mod add some functions that you can use in other mods:
 		-armor
 		and it also has the field
 		-on_rightclick: its same as in minetest.register_entity()
-3. mobs:register_spawn(name, nodes, max_light, min_light)
+3. mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per_30_block_radius)
 	This function adds the spawning of an animal (without it the
 		registered animals and monster won't spawn!)
 	"name" is the name of the animal/monster
 	"nodes" is a list of nodenames on that the animal/monster can spawn
 	"max_light" is the maximum of light
 	"min_light" is the minimum of light
+	"chance" is same as in register_abm()
+	"mobs_per_30_block_radius" is the maximum number of mobs in a 30 block
+		radius arround the possible spawning pos
 
 License:
 Sourcecode: WTFPL (see below)
