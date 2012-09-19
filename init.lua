@@ -1,4 +1,4 @@
-local mobs = {}
+mobs = {}
 function mobs:register_monster(name, def)
 	minetest.register_entity(name, {
 		hp_max = def.hp_max,
