@@ -544,3 +544,22 @@ minetest.register_craft({
 	recipe = "mobs:rat",
 	cooktime = 5,
 })
+
+mobs:register_monster("mobs:oerkki", {
+	hp_max = 8,
+	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
+	visual = "upright_sprite",
+	visual_size = {x=1, y=2},
+	textures = {"mobs_oerkki.png", "mobs_oerkki_back.png"},
+	makes_footstep_sound = false,
+	view_range = 15,
+	walk_velocity = 1,
+	run_velocity = 3,
+	damage = 4,
+	drop = "",
+	drop_count = 0,
+	armor = 3,
+	drawtype = "front",
+	light_resistant = true,
+})
+mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1)
