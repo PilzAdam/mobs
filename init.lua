@@ -356,7 +356,7 @@ function mobs:register_spawn(name, nodes, max_light, min_light)
 	minetest.register_abm({
 	nodenames = nodes,
 	neighbors = nodes,
-	interval = 60,
+	interval = 30,
 	chance = 5000,
 	action = function(pos, node)
 		pos.y = pos.y+1
