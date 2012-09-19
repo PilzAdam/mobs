@@ -21,9 +21,11 @@ There are 3 hostile mobs that want to kill the player:
   dirt monster
 - The desert monster spawns in deserts and is faster but less strong
   than the dirt monster
-There is also 1 friendly mob:
+There are also 2 friendly mobs:
 - The sheep spawns on grass. You can get wool from it when you rightclick
   it and meat if you kill it. Meat can bee cooked in the furnace to eat it.
+- The rat is the same as in 0.3. You can cook it or replace it in the
+  world if you catched it with an rightclick.
 
 For developers:
 This mod add some functions that you can use in other mods:
