@@ -44,7 +44,7 @@ This mod add some functions that you can use in other mods:
 		makes_footstep_sound: same is in minetest.register_entity()
 		view_range: the range in that the monster will see the player
 			and follow him
-		walk_velocity: the velocity when the monster is walking arround
+		walk_velocity: the velocity when the monster is walking around
 		run_velocity: the velocity when the monster is attacking a player
 		damage: the damage per second
 		light_resistant: light wont cause damage on day
@@ -52,6 +52,8 @@ This mod add some functions that you can use in other mods:
 		drop_count: the number of items that are dropped
 		armor: the armor (integer)(3=lowest; 1=highest)(fleshy group is used)
 		drawtype: "front" or "side"
+		water_damage: the damage per second if the mob is in water
+		lava_damage: the damage per second if the mob is in lava
 2. mobs:register_animal(name, def)
 	This adds a animal to Minetest that will just walk arround
 	"name" is the name of the monster ("[modname]:[animalname]")

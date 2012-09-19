@@ -15,6 +15,8 @@ mobs:register_monster("mobs:dirt_monster", {
 	drop_count = 3,
 	armor = 3,
 	drawtype = "front",
+	water_damage = 1,
+	lava_damage = 5,
 })
 mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 5000, 5)
 
@@ -34,6 +36,8 @@ mobs:register_monster("mobs:stone_monster", {
 	light_resistant = true,
 	armor = 2,
 	drawtype = "front",
+	water_damage = 0,
+	lava_damage = 0,
 })
 mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1, 5000, 5)
 
@@ -54,6 +58,8 @@ mobs:register_monster("mobs:sand_monster", {
 	light_resistant = true,
 	armor = 3,
 	drawtype = "front",
+	water_damage = 3,
+	lava_damage = 1,
 })
 mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20, -1, 5000, 5)
 
@@ -68,6 +74,8 @@ mobs:register_animal("mobs:sheep", {
 	drop = "mobs:meat_raw",
 	drop_count = 2,
 	drawtype = "side",
+	water_damage = 1,
+	lava_damage = 5,
 	
 	on_rightclick = function(self, clicker)
 		if self.naked then
@@ -113,6 +121,8 @@ mobs:register_animal("mobs:rat", {
 	drop = "",
 	drop_count = 0,
 	drawtype = "side",
+	water_damage = 0,
+	lava_damage = 1,
 	
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
@@ -166,5 +176,7 @@ mobs:register_monster("mobs:oerkki", {
 	armor = 3,
 	drawtype = "front",
 	light_resistant = true,
+	water_damage = 1,
+	lava_damage = 1,
 })
 mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1, 5000, 5)

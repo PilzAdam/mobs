@@ -13,6 +13,8 @@ function mobs:register_monster(name, def)
 		run_velocity = def.run_velocity,
 		damage = def.damage,
 		light_resistant = def.light_resistant,
+		water_damage = def.water_damage,
+		lava_damage = def.lava_damage,
 		drop = def.drop,
 		drop_count = def.drop_count,
 		armor = def.armor,
@@ -69,20 +71,20 @@ function mobs:register_monster(name, def)
 				}, nil)
 			end
 			
-			if string.find(minetest.env:get_node(self.object:getpos()).name, "default:water") then
+			if self.water_damage and self.water_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:water") then
 				self.object:punch(self.object, 1.0, {
 					full_punch_interval=1.0,
 					groupcaps={
-						fleshy={times={[3]=1/1}},
+						fleshy={times={[self.armor]=1/self.water_damage}},
 					}
 				}, nil)
 			end
 			
-			if string.find(minetest.env:get_node(self.object:getpos()).name, "default:lava") then
+			if self.lava_damage and self.lava_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:lava") then
 				self.object:punch(self.object, 1.0, {
 					full_punch_interval=1.0,
 					groupcaps={
-						fleshy={times={[3]=1/2}},
+						fleshy={times={[self.armor]=1/self.lava_damage}},
 					}
 				}, nil)
 			end
@@ -242,6 +244,8 @@ function mobs:register_animal(name, def)
 		on_rightclick = def.on_rightclick,
 		drop_count = def.drop_count,
 		drawtype = def.drawtype,
+		water_damage = def.water_damage,
+		lava_damage = def.lava_damage,
 		
 		timer = 0,
 		state = "stand",
@@ -281,11 +285,20 @@ function mobs:register_animal(name, def)
 			end
 			self.timer = 0
 			
-			if string.find(minetest.env:get_node(self.object:getpos()).name, "default:lava") then
+			if self.water_damage and self.water_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:water") then
 				self.object:punch(self.object, 1.0, {
 					full_punch_interval=1.0,
 					groupcaps={
-						fleshy={times={[3]=1/2}},
+						fleshy={times={[3]=1/self.water_damage}},
+					}
+				}, nil)
+			end
+			
+			if self.lava_damage and self.lava_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:lava") then
+				self.object:punch(self.object, 1.0, {
+					full_punch_interval=1.0,
+					groupcaps={
+						fleshy={times={[3]=1/self.lava_damage}},
 					}
 				}, nil)
 			end
