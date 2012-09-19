@@ -24,6 +24,7 @@ function mobs:register_monster(name, def)
 		attack = {player=nil, dist=nil},
 		state = "stand",
 		v_start = false,
+		old_y = nil,
 		
 		
 		set_velocity = function(self, v)
@@ -54,6 +55,24 @@ function mobs:register_monster(name, def)
 				self.object:setacceleration({x=0, y=-10, z=0})
 			end
 			
+			if self.object:getvelocity().y == 0 then
+				if not self.old_y then
+					self.old_y = self.object:getpos().y
+				else
+					local d = self.old_y - self.object:getpos().y
+					if d > 5 then
+						local damage = d-5
+						self.object:punch(self.object, 1.0, {
+							full_punch_interval=1.0,
+							groupcaps={
+								fleshy={times={[self.armor]=1/damage}},
+							}
+						}, nil)
+					end
+					self.old_y = self.object:getpos().y
+				end
+			end
+			
 			self.timer = self.timer+dtime
 			if self.state ~= "attack" then
 				if self.timer < 1 then
@@ -67,7 +86,7 @@ function mobs:register_monster(name, def)
 					self.object:punch(self.object, 1.0, {
 						full_punch_interval=1.0,
 						groupcaps={
-							fleshy={times={[3]=1/10}},
+							fleshy={times={[self.armor]=1/1}},
 						}
 					}, nil)
 				end
@@ -257,6 +276,7 @@ function mobs:register_animal(name, def)
 		
 		timer = 0,
 		state = "stand",
+		old_y = nil,
 		
 		
 		set_velocity = function(self, v)
@@ -285,6 +305,24 @@ function mobs:register_animal(name, def)
 				self.object:setacceleration({x=x, y=-10, z=z})
 			else
 				self.object:setacceleration({x=0, y=-10, z=0})
+			end
+			
+			if self.object:getvelocity().y == 0 then
+				if not self.old_y then
+					self.old_y = self.object:getpos().y
+				else
+					local d = self.old_y - self.object:getpos().y
+					if d > 5 then
+						local damage = d-5
+						self.object:punch(self.object, 1.0, {
+							full_punch_interval=1.0,
+							groupcaps={
+								fleshy={times={[3]=1/damage}},
+							}
+						}, nil)
+					end
+					self.old_y = self.object:getpos().y
+				end
 			end
 			
 			self.timer = self.timer+dtime
