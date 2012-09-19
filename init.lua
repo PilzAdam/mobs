@@ -90,7 +90,7 @@ mobs:register_animal("mobs:sheep", {
 		end
 	end,
 })
-mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20, 8, 5000, 3)
+mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20, 8, 8000, 1)
 
 minetest.register_craftitem("mobs:meat_raw", {
 	description = "Raw Meat",
