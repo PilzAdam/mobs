@@ -1,6 +1,7 @@
 dofile(minetest.get_modpath("mobs").."/api.lua")
 
-mobs:register_monster("mobs:dirt_monster", {
+mobs:register_mob("mobs:dirt_monster", {
+	type = "monster",
 	hp_max = 5,
 	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
 	visual = "upright_sprite",
@@ -17,10 +18,13 @@ mobs:register_monster("mobs:dirt_monster", {
 	drawtype = "front",
 	water_damage = 1,
 	lava_damage = 5,
+	light_damage = 2,
+	on_rightclick = nil,
 })
 mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 5000, 5)
 
-mobs:register_monster("mobs:stone_monster", {
+mobs:register_mob("mobs:stone_monster", {
+	type = "monster",
 	hp_max = 10,
 	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
 	visual = "upright_sprite",
@@ -38,11 +42,13 @@ mobs:register_monster("mobs:stone_monster", {
 	drawtype = "front",
 	water_damage = 0,
 	lava_damage = 0,
+	light_damage = 0,
 })
 mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1, 5000, 5)
 
 
-mobs:register_monster("mobs:sand_monster", {
+mobs:register_mob("mobs:sand_monster", {
+	type = "monster",
 	hp_max = 3,
 	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
 	visual = "upright_sprite",
@@ -60,10 +66,12 @@ mobs:register_monster("mobs:sand_monster", {
 	drawtype = "front",
 	water_damage = 3,
 	lava_damage = 1,
+	light_damage = 0,
 })
 mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20, -1, 5000, 5)
 
-mobs:register_animal("mobs:sheep", {
+mobs:register_mob("mobs:sheep", {
+	type = "animal",
 	hp_max = 5,
 	collisionbox = {-0.6, -0.625, -0.6, 0.6, 0.625, 0.6},
 	visual = "upright_sprite",
@@ -71,11 +79,13 @@ mobs:register_animal("mobs:sheep", {
 	textures = {"mobs_sheep.png", "mobs_sheep.png"},
 	makes_footstep_sound = true,
 	walk_velocity = 1,
+	armor = 3,
 	drop = "mobs:meat_raw",
 	drop_count = 2,
 	drawtype = "side",
 	water_damage = 1,
 	lava_damage = 5,
+	light_damage = 0,
 	
 	on_rightclick = function(self, clicker)
 		if self.naked then
@@ -110,7 +120,8 @@ minetest.register_craft({
 	cooktime = 5,
 })
 
-mobs:register_animal("mobs:rat", {
+mobs:register_mob("mobs:rat", {
+	type = "animal",
 	hp_max = 1,
 	collisionbox = {-0.25, -0.175, -0.25, 0.25, 0.1, 0.25},
 	visual = "upright_sprite",
@@ -118,11 +129,13 @@ mobs:register_animal("mobs:rat", {
 	textures = {"mobs_rat.png", "mobs_rat.png"},
 	makes_footstep_sound = false,
 	walk_velocity = 1,
+	armor = 3,
 	drop = "",
 	drop_count = 0,
 	drawtype = "side",
 	water_damage = 0,
 	lava_damage = 1,
+	light_damage = 0,
 	
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
@@ -160,7 +173,8 @@ minetest.register_craft({
 	cooktime = 5,
 })
 
-mobs:register_monster("mobs:oerkki", {
+mobs:register_mob("mobs:oerkki", {
+	type = "monster",
 	hp_max = 8,
 	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
 	visual = "upright_sprite",
@@ -178,5 +192,6 @@ mobs:register_monster("mobs:oerkki", {
 	light_resistant = true,
 	water_damage = 1,
 	lava_damage = 1,
+	light_damage = 0,
 })
 mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1, 5000, 5)

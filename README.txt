@@ -31,10 +31,11 @@ There are also 2 friendly mobs:
 
 For developers:
 This mod add some functions that you can use in other mods:
-1. mobs:register_monster(name, def)
+1. mobs:register_mob(name, def)
 	This adds a monster to Minetest that will attack the player
 	"name" is the name of the monster ("[modname]:[monstername]")
 	"def" is a table with the following values:
+		type: the type of the mob ("monster" or "animal")
 		hp_max: same is in minetest.register_entity()
 		physical: same is in minetest.register_entity()
 		collisionbox: same is in minetest.register_entity()
@@ -47,24 +48,14 @@ This mod add some functions that you can use in other mods:
 		walk_velocity: the velocity when the monster is walking around
 		run_velocity: the velocity when the monster is attacking a player
 		damage: the damage per second
-		light_resistant: light wont cause damage on day
 		drop: the drop item of the monster
 		drop_count: the number of items that are dropped
 		armor: the armor (integer)(3=lowest; 1=highest)(fleshy group is used)
 		drawtype: "front" or "side"
 		water_damage: the damage per second if the mob is in water
 		lava_damage: the damage per second if the mob is in lava
-2. mobs:register_animal(name, def)
-	This adds a animal to Minetest that will just walk arround
-	"name" is the name of the monster ("[modname]:[animalname]")
-	"def" is the same table as in register_monster but without these values:
-		-view_range
-		-run_velocity
-		-damage
-		-light_resistant
-		-armor
-		and it also has the field
-		-on_rightclick: its same as in minetest.register_entity()
+		light_damage: the damage per second if the mob is in light
+		on_rightclick: its same as in minetest.register_entity()
 3. mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per_30_block_radius)
 	This function adds the spawning of an animal (without it the
 		registered animals and monster won't spawn!)
