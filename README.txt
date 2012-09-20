@@ -48,8 +48,11 @@ This mod add some functions that you can use in other mods:
 		walk_velocity: the velocity when the monster is walking around
 		run_velocity: the velocity when the monster is attacking a player
 		damage: the damage per second
-		drop: the drop item of the monster
-		drop_count: the number of items that are dropped
+		drops: is list of tables with the following fields:
+			name: itemname
+			chance: the inverted chance (same as in abm) to get the item
+			min: the minimum number of items
+			max: the maximum number of items
 		armor: the armor (integer)(3=lowest; 1=highest)(fleshy group is used)
 		drawtype: "front" or "side"
 		water_damage: the damage per second if the mob is in water

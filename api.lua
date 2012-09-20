@@ -15,8 +15,7 @@ function mobs:register_mob(name, def)
 		light_damage = def.light_damage,
 		water_damage = def.water_damage,
 		lava_damage = def.lava_damage,
-		drop = def.drop,
-		drop_count = def.drop_count,
+		drops = def.drops,
 		armor = def.armor,
 		drawtype = def.drawtype,
 		on_rightclick = def.on_rightclick,
@@ -235,23 +234,29 @@ function mobs:register_mob(name, def)
 		on_punch = function(self, hitter)
 			if self.object:get_hp() <= 0 then
 				if hitter and hitter:is_player() and hitter:get_inventory() then
-					for i=1,math.random(0,2)-1+self.drop_count do
-						hitter:get_inventory():add_item("main", ItemStack(self.drop))
+					for _,drop in ipairs(self.drops) do
+						if math.random(1, drop.chance) == 1 then
+							hitter:get_inventory():add_item("main", ItemStack(drop.name.." "..math.random(drop.min, drop.max)))
+						end
 					end
 				else
-					for i=1,math.random(0,2)-1+self.drop_count do
-						local obj = minetest.env:add_item(self.object:getpos(), self.drop)
-						if obj then
-							obj:get_luaentity().collect = true
-							local x = math.random(1, 5)
-							if math.random(1,2) == 1 then
-								x = -x
+					for _,drop in ipairs(self.drops) do
+						if math.random(1, drop.chance) == 1 then
+							for i=1,math.random(drop.min, drop.max) do
+								local obj = minetest.env:add_item(self.object:getpos(), drop.name)
+								if obj then
+									obj:get_luaentity().collect = true
+									local x = math.random(1, 5)
+									if math.random(1,2) == 1 then
+										x = -x
+									end
+									local z = math.random(1, 5)
+									if math.random(1,2) == 1 then
+										z = -z
+									end
+									obj:setvelocity({x=1/x, y=obj:getvelocity().y, z=1/z})
+								end
 							end
-							local z = math.random(1, 5)
-							if math.random(1,2) == 1 then
-								z = -z
-							end
-							obj:setvelocity({x=1/x, y=obj:getvelocity().y, z=1/z})
 						end
 					end
 				end
