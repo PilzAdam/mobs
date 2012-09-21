@@ -14,20 +14,7 @@ For further information or help see:
 http://wiki.minetest.com/wiki/Installing_Mods
 
 How to use the mod:
-There are 4 hostile mobs that want to kill the player:
-- The dirt monster spawns at night on grass and get killed on day when
-  its too light.
-- The stone monster spawns on stone and is stronger but slower than the
-  dirt monster
-- The desert monster spawns in deserts and is faster but less strong
-  than the dirt monster
-- The oerkki is the same as in 0.3. It spawns in realy dark caves and
-  is stronger than the dirt monster.
-There are also 2 friendly mobs:
-- The sheep spawns on grass. You can get wool from it when you rightclick
-  it and meat if you kill it. Meat can bee cooked in the furnace to eat it.
-- The rat is the same as in 0.3. You can cook it or replace it in the
-  world if you catched it with an rightclick.
+See https://github.com/PilzAdam/mobs/wiki
 
 For developers:
 This mod add some functions that you can use in other mods:
