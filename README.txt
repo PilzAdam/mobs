@@ -63,6 +63,9 @@ This mod add some functions that you can use in other mods:
 			maybe somehting like "explode" in the future (creeper))
 		arrow: if the attack_type="shoot" needed: the entity name of the arrow
 		shoot_interval: the minimum shoot interval
+		sounds: this is a table with sounds of the mob
+			random: a sound that is played randomly
+			attack: a sound that is played when a mob hits a player
 2. mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per_30_block_radius)
 	This function adds the spawning of an animal (without it the
 		registered animals and monster won't spawn!)

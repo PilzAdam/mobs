@@ -105,6 +105,9 @@ mobs:register_mob("mobs:sheep", {
 	water_damage = 1,
 	lava_damage = 5,
 	light_damage = 0,
+	sounds = {
+		random = "mobs_sheep",
+	},
 	
 	on_rightclick = function(self, clicker)
 		if self.naked then
@@ -241,6 +244,9 @@ mobs:register_mob("mobs:dungeon_master", {
 	attack_type = "shoot",
 	arrow = "mobs:fireball",
 	shoot_interval = 2.5,
+	sounds = {
+		attack = "mobs_fireball",
+	},
 })
 mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 2, -1, 7000, 0)
 

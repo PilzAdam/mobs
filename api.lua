@@ -23,6 +23,7 @@ function mobs:register_mob(name, def)
 		attack_type = def.attack_type,
 		arrow = def.arrow,
 		shoot_interval = def.shoot_interval,
+		sounds = def.sounds,
 		
 		timer = 0,
 		attack = {player=nil, dist=nil},
@@ -83,6 +84,10 @@ function mobs:register_mob(name, def)
 					return
 				end
 				self.timer = 0
+			end
+			
+			if self.sounds and self.sounds.random and math.random(1, 100) <= 10 then
+				minetest.sound_play(self.sounds.random, {object = self.object})
 			end
 			
 			local do_env_damage = function(self)
@@ -215,6 +220,9 @@ function mobs:register_mob(name, def)
 						if self.damage > 2 then
 							d1 = 1/(self.damage-2)
 						end
+						if self.sounds and self.sounds.attack then
+							minetest.sound_play(self.sounds.attack, {object = self.object})
+						end
 						self.attack.player:punch(self.object, 1.0,  {
 							full_punch_interval=1.0,
 							groupcaps={
@@ -250,6 +258,10 @@ function mobs:register_mob(name, def)
 				
 				if self.timer > self.shoot_interval and math.random(1, 100) <= 60 then
 					self.timer = 0
+					
+					if self.sounds and self.sounds.attack then
+						minetest.sound_play(self.sounds.attack, {object = self.object})
+					end
 					
 					local obj = minetest.env:add_entity(self.object:getpos(), self.arrow)
 					local amount = (vec.x^2+vec.y^2+vec.z^2)^0.5
