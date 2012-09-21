@@ -20,6 +20,9 @@ function mobs:register_mob(name, def)
 		drawtype = def.drawtype,
 		on_rightclick = def.on_rightclick,
 		type = def.type,
+		attack_type = def.attack_type,
+		arrow = def.arrow,
+		shoot_interval = def.shoot_interval,
 		
 		timer = 0,
 		attack = {player=nil, dist=nil},
@@ -160,7 +163,7 @@ function mobs:register_mob(name, def)
 					v.y = 5
 					self.object:setvelocity(v)
 				end
-			elseif self.state == "attack" then
+			elseif self.state == "attack" and self.attack_type == "dogfight" then
 				local s = self.object:getpos()
 				local p = self.attack.player:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
@@ -219,6 +222,43 @@ function mobs:register_mob(name, def)
 							}
 						}, vec)
 					end
+				end
+			elseif self.state == "attack" and self.attack_type == "shoot" then
+				local s = self.object:getpos()
+				local p = self.attack.player:getpos()
+				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
+					self.state = "stand"
+					self.v_start = false
+					self.set_velocity(self, 0)
+					self.attack = {player=nil, dist=nil}
+					return
+				else
+					self.attack.dist = dist
+				end
+				
+				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
+				local yaw = math.atan(vec.z/vec.x)+math.pi/2
+				if self.drawtype == "side" then
+					yaw = yaw+(math.pi/2)
+				end
+				if p.x > s.x then
+					yaw = yaw+math.pi
+				end
+				self.object:setyaw(yaw)
+				self.set_velocity(self, 0)
+				
+				if self.timer > self.shoot_interval and math.random(1, 100) <= 60 then
+					self.timer = 0
+					
+					local obj = minetest.env:add_entity(self.object:getpos(), self.arrow)
+					local amount = (vec.x^2+vec.y^2+vec.z^2)^0.5
+					local v = obj:get_luaentity().velocity
+					vec.y = vec.y+1
+					vec.x = vec.x*v/amount
+					vec.y = vec.y*v/amount
+					vec.z = vec.z*v/amount
+					obj:setvelocity(vec)
 				end
 			end
 		end,
@@ -309,4 +349,33 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per
 		minetest.env:add_entity(pos, name)
 	end
 })
+end
+
+function mobs:register_arrow(name, def)
+	minetest.register_entity(name, {
+		physical = false,
+		visual = def.visual,
+		visual_size = def.visual_size,
+		textures = def.textures,
+		velocity = def.velocity,
+		hit_player = def.hit_player,
+		hit_node = def.hit_node,
+		
+		on_step = function(self, dtime)
+			local pos = self.object:getpos()
+			if minetest.env:get_node(self.object:getpos()).name ~= "air" then
+				self.hit_node(self, pos, node)
+				self.object:remove()
+				return
+			end
+			pos.y = pos.y-1
+			for _,player in pairs(minetest.env:get_objects_inside_radius(pos, 1)) do
+				if player:is_player() then
+					self.hit_player(self, player)
+					self.object:remove()
+					return
+				end
+			end
+		end
+	})
 end
