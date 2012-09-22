@@ -48,6 +48,10 @@ function mobs:register_mob(name, def)
 		end,
 		
 		on_step = function(self, dtime)
+			if self.type == "monster" and minetest.setting_getbool("only_peaceful_mobs") then
+				self.object:remove()
+			end
+			
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw()
 				if self.drawtype == "side" then
@@ -281,6 +285,9 @@ function mobs:register_mob(name, def)
 			self.state = "stand"
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
+			if self.type == "hostile" and minetest.setting_getbool("only_peaceful_mobs") then
+				self.object:remove()
+			end
 		end,
 		
 		on_punch = function(self, hitter)
