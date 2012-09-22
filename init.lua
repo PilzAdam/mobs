@@ -26,7 +26,7 @@ mobs:register_mob("mobs:dirt_monster", {
 	on_rightclick = nil,
 	attack_type = "dogfight",
 })
-mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3)
+mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
 mobs:register_mob("mobs:stone_monster", {
 	type = "monster",
@@ -54,7 +54,7 @@ mobs:register_mob("mobs:stone_monster", {
 	light_damage = 0,
 	attack_type = "dogfight",
 })
-mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1, 7000, 3)
+mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
 
 
 mobs:register_mob("mobs:sand_monster", {
@@ -83,7 +83,7 @@ mobs:register_mob("mobs:sand_monster", {
 	light_damage = 0,
 	attack_type = "dogfight",
 })
-mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3)
+mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
 mobs:register_mob("mobs:sheep", {
 	type = "animal",
@@ -122,7 +122,7 @@ mobs:register_mob("mobs:sheep", {
 		end
 	end,
 })
-mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 0)
+mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 0, 31000)
 
 minetest.register_craftitem("mobs:meat_raw", {
 	description = "Raw Meat",
@@ -165,7 +165,7 @@ mobs:register_mob("mobs:rat", {
 		end
 	end,
 })
-mobs:register_spawn("mobs:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1)
+mobs:register_spawn("mobs:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1, 31000)
 
 minetest.register_craftitem("mobs:rat", {
 	description = "Rat",
@@ -215,7 +215,7 @@ mobs:register_mob("mobs:oerkki", {
 	light_damage = 0,
 	attack_type = "dogfight",
 })
-mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1, 7000, 3)
+mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
 mobs:register_mob("mobs:dungeon_master", {
 	type = "monster",
@@ -248,7 +248,7 @@ mobs:register_mob("mobs:dungeon_master", {
 		attack = "mobs_fireball",
 	},
 })
-mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 2, -1, 7000, 0)
+mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 2, -1, 7000, 0, -50)
 
 mobs:register_arrow("mobs:fireball", {
 	visual = "sprite",

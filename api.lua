@@ -325,7 +325,7 @@ function mobs:register_mob(name, def)
 	})
 end
 
-function mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per_30_block_radius)
+function mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per_30_block_radius, max_height)
 	minetest.register_abm({
 	nodenames = nodes,
 	neighbors = nodes,
@@ -340,6 +340,9 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per
 			return
 		end
 		if minetest.env:get_node_light(pos) < min_light then
+			return
+		end
+		if pos.y > max_height then
 			return
 		end
 		if minetest.env:get_node(pos).name ~= "air" then
