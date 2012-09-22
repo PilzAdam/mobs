@@ -285,7 +285,7 @@ function mobs:register_mob(name, def)
 			self.state = "stand"
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
-			if self.type == "hostile" and minetest.setting_getbool("only_peaceful_mobs") then
+			if self.type == "monster" and minetest.setting_getbool("only_peaceful_mobs") then
 				self.object:remove()
 			end
 		end,
