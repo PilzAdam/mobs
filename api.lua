@@ -90,7 +90,7 @@ function mobs:register_mob(name, def)
 				self.timer = 0
 			end
 			
-			if self.sounds and self.sounds.random and math.random(1, 100) <= 10 then
+			if self.sounds and self.sounds.random and math.random(1, 100) <= 1 then
 				minetest.sound_play(self.sounds.random, {object = self.object})
 			end
 			
