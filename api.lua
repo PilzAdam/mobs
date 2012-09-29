@@ -95,7 +95,7 @@ function mobs:register_mob(name, def)
 			end
 			
 			local do_env_damage = function(self)
-				if self.light_damage and self.light_damage ~= 0 and self.object:getpos().y>0 and minetest.env:get_node_light(self.object:getpos()) and minetest.env:get_node_light(self.object:getpos()) > 3 then
+				if self.light_damage and self.light_damage ~= 0 and self.object:getpos().y>0 and minetest.env:get_node_light(self.object:getpos()) and minetest.env:get_node_light(self.object:getpos()) > 3 and minetest.env:get_timeofday() > 0.2 and minetest.env:get_timeofday() < 0.8 then
 					self.object:punch(self.object, 1.0, {
 						full_punch_interval=1.0,
 						groupcaps={
