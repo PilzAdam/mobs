@@ -297,3 +297,7 @@ mobs:register_arrow("mobs:fireball", {
 		end
 	end
 })
+
+if minetest.setting_get("log_mods") then
+	minetest.log("action", "mobs loaded")
+end
