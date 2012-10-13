@@ -333,13 +333,18 @@ function mobs:register_mob(name, def)
 	})
 end
 
+mobs.spawning_mobs = {}
 function mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per_30_block_radius, max_height)
+	mobs.spawning_mobs[name] = true
 	minetest.register_abm({
 	nodenames = nodes,
 	neighbors = nodes,
 	interval = 30,
 	chance = chance,
 	action = function(pos, node)
+		if not mobs.spawning_mobs[name] then
+			return
+		end
 		pos.y = pos.y+1
 		if not minetest.env:get_node_light(pos) then
 			return
