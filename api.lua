@@ -173,6 +173,10 @@ function mobs:register_mob(name, def)
 					self.object:setvelocity(v)
 				end
 			elseif self.state == "attack" and self.attack_type == "dogfight" then
+				if not self.attack.player or not self.attack.player:is_player() then
+					self.state = "stand"
+					return
+				end
 				local s = self.object:getpos()
 				local p = self.attack.player:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
@@ -236,6 +240,10 @@ function mobs:register_mob(name, def)
 					end
 				end
 			elseif self.state == "attack" and self.attack_type == "shoot" then
+				if not self.attack.player or not self.attack.player:is_player() then
+					self.state = "stand"
+					return
+				end
 				local s = self.object:getpos()
 				local p = self.attack.player:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
