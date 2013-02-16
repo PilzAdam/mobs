@@ -317,44 +317,44 @@ mobs.spawning_mobs = {}
 function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
 	mobs.spawning_mobs[name] = true
 	minetest.register_abm({
-	nodenames = nodes,
-	neighbors = nodes,
-	interval = 30,
-	chance = chance,
-	action = function(pos, node, _, active_object_count_wider)
-		if active_object_count_wider > active_object_count then
-			return
+		nodenames = nodes,
+		neighbors = nodes,
+		interval = 30,
+		chance = chance,
+		action = function(pos, node, _, active_object_count_wider)
+			if active_object_count_wider > active_object_count then
+				return
+			end
+			if not mobs.spawning_mobs[name] then
+				return
+			end
+			pos.y = pos.y+1
+			if not minetest.env:get_node_light(pos) then
+				return
+			end
+			if minetest.env:get_node_light(pos) > max_light then
+				return
+			end
+			if minetest.env:get_node_light(pos) < min_light then
+				return
+			end
+			if pos.y > max_height then
+				return
+			end
+			if minetest.env:get_node(pos).name ~= "air" then
+				return
+			end
+			pos.y = pos.y+1
+			if minetest.env:get_node(pos).name ~= "air" then
+				return
+			end
+			
+			if minetest.setting_getbool("display_mob_spawn") then
+				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
+			end
+			minetest.env:add_entity(pos, name)
 		end
-		if not mobs.spawning_mobs[name] then
-			return
-		end
-		pos.y = pos.y+1
-		if not minetest.env:get_node_light(pos) then
-			return
-		end
-		if minetest.env:get_node_light(pos) > max_light then
-			return
-		end
-		if minetest.env:get_node_light(pos) < min_light then
-			return
-		end
-		if pos.y > max_height then
-			return
-		end
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		pos.y = pos.y+1
-		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		
-		if minetest.setting_getbool("display_mob_spawn") then
-			minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
-		end
-		minetest.env:add_entity(pos, name)
-	end
-})
+	})
 end
 
 function mobs:register_arrow(name, def)
