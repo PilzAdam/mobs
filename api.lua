@@ -334,14 +334,17 @@ function mobs:register_mob(name, def)
 end
 
 mobs.spawning_mobs = {}
-function mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per_30_block_radius, max_height)
+function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
 	mobs.spawning_mobs[name] = true
 	minetest.register_abm({
 	nodenames = nodes,
 	neighbors = nodes,
 	interval = 30,
 	chance = chance,
-	action = function(pos, node)
+	action = function(pos, node, _, active_object_count_wider)
+		if active_object_count_wider > active_object_count then
+			return
+		end
 		if not mobs.spawning_mobs[name] then
 			return
 		end
@@ -363,18 +366,6 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, mobs_per
 		end
 		pos.y = pos.y+1
 		if minetest.env:get_node(pos).name ~= "air" then
-			return
-		end
-		
-		local count = 0
-		for _,obj in pairs(minetest.env:get_objects_inside_radius(pos, 30)) do
-			if obj:is_player() then
-				return
-			elseif obj:get_luaentity() and obj:get_luaentity().name == name then
-				count = count+1
-			end
-		end
-		if count > mobs_per_30_block_radius then
 			return
 		end
 		
