@@ -306,26 +306,6 @@ function mobs:register_mob(name, def)
 							hitter:get_inventory():add_item("main", ItemStack(drop.name.." "..math.random(drop.min, drop.max)))
 						end
 					end
-				else
-					for _,drop in ipairs(self.drops) do
-						if math.random(1, drop.chance) == 1 then
-							for i=1,math.random(drop.min, drop.max) do
-								local obj = minetest.env:add_item(self.object:getpos(), drop.name)
-								if obj then
-									obj:get_luaentity().collect = true
-									local x = math.random(1, 5)
-									if math.random(1,2) == 1 then
-										x = -x
-									end
-									local z = math.random(1, 5)
-									if math.random(1,2) == 1 then
-										z = -z
-									end
-									obj:setvelocity({x=1/x, y=obj:getvelocity().y, z=1/z})
-								end
-							end
-						end
-					end
 				end
 			end
 		end,
