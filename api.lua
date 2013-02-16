@@ -129,7 +129,7 @@ function mobs:register_mob(name, def)
 				do_env_damage(self)
 			end
 			
-			if self.type == "monster" then
+			if self.type == "monster" and minetest.setting_getbool("enable_damage") then
 				for _,player in pairs(minetest.get_connected_players()) do
 					local s = self.object:getpos()
 					local p = player:getpos()
