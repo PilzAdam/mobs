@@ -22,6 +22,7 @@ The API documentation is moved to https://github.com/PilzAdam/mobs/wiki/API
 License:
 Sourcecode: WTFPL (see below)
 Grahpics: WTFPL (see below)
+Models: WTFPL (by Pavel_S, see below)
 
 See also:
 http://minetest.net/

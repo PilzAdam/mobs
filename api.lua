@@ -6,6 +6,7 @@ function mobs:register_mob(name, def)
 		collisionbox = def.collisionbox,
 		visual = def.visual,
 		visual_size = def.visual_size,
+		mesh = def.mesh,
 		textures = def.textures,
 		makes_footstep_sound = def.makes_footstep_sound,
 		view_range = def.view_range,
@@ -24,8 +25,10 @@ function mobs:register_mob(name, def)
 		arrow = def.arrow,
 		shoot_interval = def.shoot_interval,
 		sounds = def.sounds,
+		animation = def.animation,
 		
 		timer = 0,
+		env_damage_timer = 0, -- only if state = "attack"
 		attack = {player=nil, dist=nil},
 		state = "stand",
 		v_start = false,
@@ -45,6 +48,64 @@ function mobs:register_mob(name, def)
 		get_velocity = function(self)
 			local v = self.object:getvelocity()
 			return (v.x^2 + v.z^2)^(0.5)
+		end,
+		
+		set_animation = function(self, type)
+			if not self.animation then
+				return
+			end
+			if not self.animation.current then
+				self.animation.current = ""
+			end
+			if type == "stand" and self.animation.current ~= "stand" then
+				if
+					self.animation.stand_start
+					and self.animation.stand_end
+					and self.animation.speed_normal
+				then
+					self.object:set_animation(
+						{x=self.animation.stand_start,y=self.animation.stand_end},
+						self.animation.speed_normal, 0
+					)
+					self.animation.current = "stand"
+				end
+			elseif type == "walk" and self.animation.current ~= "walk"  then
+				if
+					self.animation.walk_start
+					and self.animation.walk_end
+					and self.animation.speed_normal
+				then
+					self.object:set_animation(
+						{x=self.animation.walk_start,y=self.animation.walk_end},
+						self.animation.speed_normal, 0
+					)
+					self.animation.current = "walk"
+				end
+			elseif type == "run" and self.animation.current ~= "run"  then
+				if
+					self.animation.run_start
+					and self.animation.run_end
+					and self.animation.speed_run
+				then
+					self.object:set_animation(
+						{x=self.animation.run_start,y=self.animation.run_end},
+						self.animation.speed_run, 0
+					)
+					self.animation.current = "run"
+				end
+			elseif type == "punch" and self.animation.current ~= "punch"  then
+				if
+					self.animation.punch_start
+					and self.animation.punch_end
+					and self.animation.speed_normal
+				then
+					self.object:set_animation(
+						{x=self.animation.punch_start,y=self.animation.punch_end},
+						self.animation.speed_normal, 0
+					)
+					self.animation.current = "punch"
+				end
+			end
 		end,
 		
 		on_step = function(self, dtime)
@@ -73,9 +134,7 @@ function mobs:register_mob(name, def)
 						local damage = d-5
 						self.object:punch(self.object, 1.0, {
 							full_punch_interval=1.0,
-							groupcaps={
-								fleshy={times={[self.armor]=1/damage}},
-							}
+							damage_groups = {fleshy=damage/(self.armor/100)}
 						}, nil)
 					end
 					self.old_y = self.object:getpos().y
@@ -98,32 +157,32 @@ function mobs:register_mob(name, def)
 				if self.light_damage and self.light_damage ~= 0 and self.object:getpos().y>0 and minetest.env:get_node_light(self.object:getpos()) and minetest.env:get_node_light(self.object:getpos()) > 3 and minetest.env:get_timeofday() > 0.2 and minetest.env:get_timeofday() < 0.8 then
 					self.object:punch(self.object, 1.0, {
 						full_punch_interval=1.0,
-						groupcaps={
-							fleshy={times={[self.armor]=1/self.light_damage}},
-						}
+						damage_groups = {fleshy=self.light_damage/(self.armor/100)}
 					}, nil)
 				end
 				
-				if self.water_damage and self.water_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:water") then
+				if self.water_damage and self.water_damage ~= 0 and
+					minetest.get_item_group(minetest.env:get_node(self.object:getpos()).name, "water") ~= 0
+				then
 					self.object:punch(self.object, 1.0, {
 						full_punch_interval=1.0,
-						groupcaps={
-							fleshy={times={[self.armor]=1/self.water_damage}},
-						}
+						damage_groups = {fleshy=self.water_damage/(self.armor/100)}
 					}, nil)
 				end
 				
-				if self.lava_damage and self.lava_damage ~= 0 and string.find(minetest.env:get_node(self.object:getpos()).name, "default:lava") then
+				if self.lava_damage and self.lava_damage ~= 0 and
+					minetest.get_item_group(minetest.env:get_node(self.object:getpos()).name, "lava") ~= 0
+				then
 					self.object:punch(self.object, 1.0, {
 						full_punch_interval=1.0,
-						groupcaps={
-							fleshy={times={[self.armor]=1/self.lava_damage}},
-						}
+						damage_groups = {fleshy=self.lava_damage/(self.armor/100)}
 					}, nil)
 				end
 			end
 			
-			if self.state == "attack" and self.timer > 1 then
+			self.env_damage_timer = self.env_damage_timer + dtime
+			if self.state == "attack" and self.env_damage_timer > 1 then
+				self.env_damage_timer = 0
 				do_env_damage(self)
 			elseif self.state ~= "attack" then
 				do_env_damage(self)
@@ -151,21 +210,25 @@ function mobs:register_mob(name, def)
 			end
 			
 			if self.state == "stand" then
-				if math.random(1, 2) == 1 then
+				if math.random(1, 4) == 1 then
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 				end
+				self.set_animation(self, "stand")
 				if math.random(1, 100) <= 50 then
 					self.set_velocity(self, self.walk_velocity)
 					self.state = "walk"
+					self.set_animation(self, "walk")
 				end
 			elseif self.state == "walk" then
 				if math.random(1, 100) <= 30 then
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 					self.set_velocity(self, self.get_velocity(self))
 				end
+				self:set_animation("walk")
 				if math.random(1, 100) <= 10 then
 					self.set_velocity(self, 0)
 					self.state = "stand"
+					self:set_animation("stand")
 				end
 				if self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 					local v = self.object:getvelocity()
@@ -175,6 +238,7 @@ function mobs:register_mob(name, def)
 			elseif self.state == "attack" and self.attack_type == "dogfight" then
 				if not self.attack.player or not self.attack.player:is_player() then
 					self.state = "stand"
+					self:set_animation("stand")
 					return
 				end
 				local s = self.object:getpos()
@@ -185,6 +249,7 @@ function mobs:register_mob(name, def)
 					self.v_start = false
 					self.set_velocity(self, 0)
 					self.attack = {player=nil, dist=nil}
+					self:set_animation("stand")
 					return
 				else
 					self.attack.dist = dist
@@ -211,37 +276,26 @@ function mobs:register_mob(name, def)
 						end
 						self.set_velocity(self, self.run_velocity)
 					end
+					self:set_animation("run")
 				else
 					self.set_velocity(self, 0)
+					self:set_animation("punch")
 					self.v_start = false
 					if self.timer > 1 then
 						self.timer = 0
-						local d1 = 10
-						local d2 = 10
-						local d3 = 10
-						if self.damage > 0 then
-							d3 = 1/self.damage
-						end
-						if self.damage > 1 then
-							d2 = 1/(self.damage-1)
-						end
-						if self.damage > 2 then
-							d1 = 1/(self.damage-2)
-						end
 						if self.sounds and self.sounds.attack then
 							minetest.sound_play(self.sounds.attack, {object = self.object})
 						end
 						self.attack.player:punch(self.object, 1.0,  {
 							full_punch_interval=1.0,
-							groupcaps={
-								fleshy={times={[1]=d1, [2]=d2, [3]=d3}},
-							}
+							damage_groups = {fleshy=self.damage}
 						}, vec)
 					end
 				end
 			elseif self.state == "attack" and self.attack_type == "shoot" then
 				if not self.attack.player or not self.attack.player:is_player() then
 					self.state = "stand"
+					self:set_animation("stand")
 					return
 				end
 				local s = self.object:getpos()
@@ -252,6 +306,7 @@ function mobs:register_mob(name, def)
 					self.v_start = false
 					self.set_velocity(self, 0)
 					self.attack = {player=nil, dist=nil}
+					self:set_animation("stand")
 					return
 				else
 					self.attack.dist = dist
@@ -270,6 +325,8 @@ function mobs:register_mob(name, def)
 				
 				if self.timer > self.shoot_interval and math.random(1, 100) <= 60 then
 					self.timer = 0
+					
+					self:set_animation("punch")
 					
 					if self.sounds and self.sounds.attack then
 						minetest.sound_play(self.sounds.attack, {object = self.object})
