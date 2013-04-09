@@ -154,7 +154,16 @@ function mobs:register_mob(name, def)
 			end
 			
 			local do_env_damage = function(self)
-				if self.light_damage and self.light_damage ~= 0 and self.object:getpos().y>0 and minetest.env:get_node_light(self.object:getpos()) and minetest.env:get_node_light(self.object:getpos()) > 3 and minetest.env:get_timeofday() > 0.2 and minetest.env:get_timeofday() < 0.8 then
+				local pos = self.object:getpos()
+				local n = minetest.env:get_node(pos)
+				
+				if self.light_damage and self.light_damage ~= 0
+					and pos.y>0
+					and minetest.env:get_node_light(pos)
+					and minetest.env:get_node_light(pos) > 4
+					and minetest.env:get_timeofday() > 0.2
+					and minetest.env:get_timeofday() < 0.8
+				then
 					self.object:punch(self.object, 1.0, {
 						full_punch_interval=1.0,
 						damage_groups = {fleshy=self.light_damage/(self.armor/100)}
@@ -162,7 +171,7 @@ function mobs:register_mob(name, def)
 				end
 				
 				if self.water_damage and self.water_damage ~= 0 and
-					minetest.get_item_group(minetest.env:get_node(self.object:getpos()).name, "water") ~= 0
+					minetest.get_item_group(n.name, "water") ~= 0
 				then
 					self.object:punch(self.object, 1.0, {
 						full_punch_interval=1.0,
@@ -171,7 +180,7 @@ function mobs:register_mob(name, def)
 				end
 				
 				if self.lava_damage and self.lava_damage ~= 0 and
-					minetest.get_item_group(minetest.env:get_node(self.object:getpos()).name, "lava") ~= 0
+					minetest.get_item_group(n.name, "lava") ~= 0
 				then
 					self.object:punch(self.object, 1.0, {
 						full_punch_interval=1.0,
