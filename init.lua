@@ -212,10 +212,14 @@ minetest.register_craft({
 mobs:register_mob("mobs:oerkki", {
 	type = "monster",
 	hp_max = 8,
-	collisionbox = {-0.4, -1, -0.4, 0.4, 1, 0.4},
-	visual = "upright_sprite",
-	visual_size = {x=1, y=2},
-	textures = {"mobs_oerkki.png", "mobs_oerkki_back.png"},
+	collisionbox = {-0.4, 0, -0.4, 0.4, 2, 0.4},
+	--visual = "upright_sprite",
+	--visual_size = {x=1, y=2},
+	--textures = {"mobs_oerkki.png", "mobs_oerkki_back.png"},
+	visual = "mesh",
+	mesh = "mobs_oerkki.x",
+	textures = {"mobs_oerkki.png"},
+	visual_size = {x=5, y=5},
 	makes_footstep_sound = false,
 	view_range = 15,
 	walk_velocity = 1,
@@ -229,6 +233,16 @@ mobs:register_mob("mobs:oerkki", {
 	lava_damage = 1,
 	light_damage = 0,
 	attack_type = "dogfight",
+	animation = {
+		stand_start = 1,
+		stand_end = 11,
+		walk_start = 25,
+		walk_end = 36,
+		run_start = 38,
+		run_end = 49,
+		speed_normal = 15,
+		speed_run = 15,
+	},
 })
 mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
