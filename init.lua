@@ -157,15 +157,18 @@ minetest.register_craft({
 mobs:register_mob("mobs:rat", {
 	type = "animal",
 	hp_max = 1,
-	collisionbox = {-0.25, -0.175, -0.25, 0.25, 0.1, 0.25},
-	visual = "upright_sprite",
-	visual_size = {x=0.7, y=0.35},
-	textures = {"mobs_rat.png", "mobs_rat.png"},
+	collisionbox = {-0.2, 0, -0.2, 0.2, 0.2, 0.2},
+	--visual = "upright_sprite",
+	--visual_size = {x=0.7, y=0.35},
+	--textures = {"mobs_rat.png", "mobs_rat.png"},
+	visual = "mesh",
+	mesh = "mobs_rat.x",
+	textures = {"mobs_rat.png"},
 	makes_footstep_sound = false,
 	walk_velocity = 1,
 	armor = 200,
 	drops = {},
-	drawtype = "side",
+	drawtype = "front",
 	water_damage = 0,
 	lava_damage = 1,
 	light_damage = 0,
@@ -181,7 +184,7 @@ mobs:register_spawn("mobs:rat", {"default:dirt_with_grass", "default:stone"}, 20
 
 minetest.register_craftitem("mobs:rat", {
 	description = "Rat",
-	inventory_image = "mobs_rat.png",
+	inventory_image = "mobs_rat_inventory.png",
 	
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.above then
