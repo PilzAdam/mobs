@@ -291,9 +291,7 @@ mobs:register_arrow("mobs:fireball", {
 		local vec = {x=s.x-p.x, y=s.y-p.y, z=s.z-p.z}
 		player:punch(self.object, 1.0,  {
 			full_punch_interval=1.0,
-			groupcaps={
-				fleshy={times={[1]=1/2, [2]=1/3, [3]=1/4}},
-			}
+			damage_groups = {fleshy=4},
 		}, vec)
 		local pos = self.object:getpos()
 		for dx=-1,1 do
