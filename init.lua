@@ -57,6 +57,16 @@ mobs:register_mob("mobs:stone_monster", {
 	lava_damage = 0,
 	light_damage = 0,
 	attack_type = "dogfight",
+	animation = {
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 0,
+		stand_end = 14,
+		walk_start = 15,
+		walk_end = 38,
+		run_start = 40,
+		run_end = 63,
+	}
 })
 mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
 
