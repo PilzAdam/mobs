@@ -152,8 +152,10 @@ mobs:register_mob("mobs:sheep", {
 			return
 		end
 		if clicker:get_inventory() then
-			self.naked = true,
-			clicker:get_inventory():add_item("main", ItemStack("wool:white "..math.random(1,3)))
+			self.naked = true
+			if minetest.registered_items["wool:white"] then
+				clicker:get_inventory():add_item("main", ItemStack("wool:white "..math.random(1,3)))
+			end
 			self.object:set_properties({
 				--textures = {"mobs_sheep_naked.png", "mobs_sheep_naked.png"},
 				textures = {"mobs_sheep_shaved.png"},
