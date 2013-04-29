@@ -16,6 +16,7 @@ function mobs:register_mob(name, def)
 		light_damage = def.light_damage,
 		water_damage = def.water_damage,
 		lava_damage = def.lava_damage,
+		disable_fall_damage = def.disable_fall_damage,
 		drops = def.drops,
 		armor = def.armor,
 		drawtype = def.drawtype,
@@ -125,7 +126,7 @@ function mobs:register_mob(name, def)
 				self.object:setacceleration({x=0, y=-10, z=0})
 			end
 			
-			if self.object:getvelocity().y == 0 then
+			if self.disable_fall_damage and self.object:getvelocity().y == 0 then
 				if not self.old_y then
 					self.old_y = self.object:getpos().y
 				else

@@ -139,6 +139,7 @@ mobs:register_mob("mobs:tree_monster", {
 	water_damage = 1,
 	lava_damage = 5,
 	light_damage = 2,
+	disable_fall_damage = true,
 	attack_type = "dogfight",
 	animation = {
 		speed_normal = 15,
