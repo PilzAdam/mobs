@@ -341,7 +341,9 @@ function mobs:register_mob(name, def)
 						minetest.sound_play(self.sounds.attack, {object = self.object})
 					end
 					
-					local obj = minetest.env:add_entity(self.object:getpos(), self.arrow)
+					local p = self.object:getpos()
+					p.y = p.y + (self.collisionbox[2]+self.collisionbox[5])/2
+					local obj = minetest.env:add_entity(p, self.arrow)
 					local amount = (vec.x^2+vec.y^2+vec.z^2)^0.5
 					local v = obj:get_luaentity().velocity
 					vec.y = vec.y+1
