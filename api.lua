@@ -133,10 +133,10 @@ function mobs:register_mob(name, def)
 					local d = self.old_y - self.object:getpos().y
 					if d > 5 then
 						local damage = d-5
-						self.object:punch(self.object, 1.0, {
-							full_punch_interval=1.0,
-							damage_groups = {fleshy=damage/(self.armor/100)}
-						}, nil)
+						self.object:set_hp(self.object:get_hp()-damage)
+						if self.object:get_hp() == 0 then
+							self.object:remove()
+						end
 					end
 					self.old_y = self.object:getpos().y
 				end
@@ -165,28 +165,28 @@ function mobs:register_mob(name, def)
 					and minetest.env:get_timeofday() > 0.2
 					and minetest.env:get_timeofday() < 0.8
 				then
-					self.object:punch(self.object, 1.0, {
-						full_punch_interval=1.0,
-						damage_groups = {fleshy=self.light_damage/(self.armor/100)}
-					}, nil)
+					self.object:set_hp(self.object:get_hp()-self.light_damage)
+					if self.object:get_hp() == 0 then
+						self.object:remove()
+					end
 				end
 				
 				if self.water_damage and self.water_damage ~= 0 and
 					minetest.get_item_group(n.name, "water") ~= 0
 				then
-					self.object:punch(self.object, 1.0, {
-						full_punch_interval=1.0,
-						damage_groups = {fleshy=self.water_damage/(self.armor/100)}
-					}, nil)
+					self.object:set_hp(self.object:get_hp()-self.water_damage)
+					if self.object:get_hp() == 0 then
+						self.object:remove()
+					end
 				end
 				
 				if self.lava_damage and self.lava_damage ~= 0 and
 					minetest.get_item_group(n.name, "lava") ~= 0
 				then
-					self.object:punch(self.object, 1.0, {
-						full_punch_interval=1.0,
-						damage_groups = {fleshy=self.lava_damage/(self.armor/100)}
-					}, nil)
+					self.object:set_hp(self.object:get_hp()-self.lava_damage)
+					if self.object:get_hp() == 0 then
+						self.object:remove()
+					end
 				end
 			end
 			
