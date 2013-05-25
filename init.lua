@@ -186,9 +186,31 @@ mobs:register_mob("mobs:sheep", {
 		walk_start = 81,
 		walk_end = 100,
 	},
+	follow = "farming:wheat",
+	view_range = 5,
 	
 	on_rightclick = function(self, clicker)
-		if self.naked then
+		local item = clicker:get_wielded_item()
+		if item:get_name() == "farming:wheat" then
+			clicker:set_wielded_item(item)
+			if not self.tamed then
+				if not minetest.setting_getbool("creative_mode") then
+					item:take_item()
+				end
+				self.tamed = true
+			elseif self.naked then
+				if not minetest.setting_getbool("creative_mode") then
+					item:take_item()
+				end
+				self.food = (self.food or 0) + 1
+				if self.food >= 8 then
+					self.naked = false
+					self.object:set_properties({
+						textures = {"mobs_sheep.png"},
+						mesh = "mobs_sheep.x",
+					})
+				end
+			end
 			return
 		end
 		if clicker:get_inventory() then

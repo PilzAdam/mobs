@@ -27,6 +27,7 @@ function mobs:register_mob(name, def)
 		shoot_interval = def.shoot_interval,
 		sounds = def.sounds,
 		animation = def.animation,
+		follow = def.follow,
 		
 		timer = 0,
 		env_damage_timer = 0, -- only if state = "attack"
@@ -35,7 +36,7 @@ function mobs:register_mob(name, def)
 		v_start = false,
 		old_y = nil,
 		lifetimer = 600,
-		
+		tamed = false,
 		
 		set_velocity = function(self, v)
 			local yaw = self.object:getyaw()
@@ -116,7 +117,7 @@ function mobs:register_mob(name, def)
 			end
 			
 			self.lifetimer = self.lifetimer - dtime
-			if self.lifetimer <= 0 then
+			if self.lifetimer <= 0 and not tamed then
 				local player_count = 0
 				for _,obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), 20)) do
 					if obj:is_player() then
@@ -232,6 +233,68 @@ function mobs:register_mob(name, def)
 						end
 					end
 				end
+			end
+			
+			if self.follow ~= "" and not self.following then
+				for _,player in pairs(minetest.get_connected_players()) do
+					local s = self.object:getpos()
+					local p = player:getpos()
+					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+					if self.view_range and dist < self.view_range then
+						self.following = player
+					end
+				end
+			end
+			
+			if self.following and self.following:is_player() then
+				if self.following:get_wielded_item():get_name() ~= self.follow then
+					self.state = "stand"
+					self.set_velocity(self, 0)
+					self.following = nil
+					self.v_start = false
+					self:set_animation("stand")
+					return
+				end
+				local s = self.object:getpos()
+				local p = self.following:getpos()
+				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+				if dist > self.view_range then
+					self.state = "stand"
+					self.set_velocity(self, 0)
+					self.following = nil
+					self.v_start = false
+					self:set_animation("stand")
+					return
+				end
+				
+				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
+				local yaw = math.atan(vec.z/vec.x)+math.pi/2
+				if self.drawtype == "side" then
+					yaw = yaw+(math.pi/2)
+				end
+				if p.x > s.x then
+					yaw = yaw+math.pi
+				end
+				self.object:setyaw(yaw)
+				if dist > 2 then
+					if not self.v_start then
+						self.v_start = true
+						self.set_velocity(self, self.walk_velocity)
+					else
+						if self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
+							local v = self.object:getvelocity()
+							v.y = 5
+							self.object:setvelocity(v)
+						end
+						self.set_velocity(self, self.walk_velocity)
+					end
+					self:set_animation("walk")
+				else
+					self.v_start = false
+					self.set_velocity(self, 0)
+					self:set_animation("stand")
+				end
+				return
 			end
 			
 			if self.state == "stand" then
@@ -387,6 +450,9 @@ function mobs:register_mob(name, def)
 				if tmp and tmp.lifetimer then
 					self.lifetimer = tmp.lifetimer - dtime_s
 				end
+				if tmp and tmp.tamed then
+					self.tamed = tmp.tamed
+				end
 			end
 			if self.lifetimer <= 0 then
 				self.object:remove()
@@ -396,6 +462,7 @@ function mobs:register_mob(name, def)
 		get_staticdata = function(self)
 			local tmp = {
 				lifetimer = self.lifetimer,
+				tamed = self.tamed,
 			}
 			return minetest.serialize(tmp)
 		end,
