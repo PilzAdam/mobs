@@ -34,6 +34,7 @@ function mobs:register_mob(name, def)
 		state = "stand",
 		v_start = false,
 		old_y = nil,
+		lifetimer = 600,
 		
 		
 		set_velocity = function(self, v)
@@ -112,6 +113,20 @@ function mobs:register_mob(name, def)
 		on_step = function(self, dtime)
 			if self.type == "monster" and minetest.setting_getbool("only_peaceful_mobs") then
 				self.object:remove()
+			end
+			
+			self.lifetimer = self.lifetimer - dtime
+			if self.lifetimer <= 0 then
+				local player_count = 0
+				for _,obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), 20)) do
+					if obj:is_player() then
+						player_count = player_count+1
+					end
+				end
+				if player_count == 0 and self.state ~= "attack" then
+					self.object:remove()
+					return
+				end
 			end
 			
 			if self.object:getvelocity().y > 0.1 then
@@ -357,7 +372,7 @@ function mobs:register_mob(name, def)
 			end
 		end,
 		
-		on_activate = function(self, staticdata)
+		on_activate = function(self, staticdata, dtime_s)
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y=-10, z=0})
 			self.state = "stand"
@@ -366,6 +381,23 @@ function mobs:register_mob(name, def)
 			if self.type == "monster" and minetest.setting_getbool("only_peaceful_mobs") then
 				self.object:remove()
 			end
+			self.lifetimer = 600 - dtime_s
+			if staticdata then
+				local tmp = minetest.deserialize(staticdata)
+				if tmp and tmp.lifetimer then
+					self.lifetimer = tmp.lifetimer - dtime_s
+				end
+			end
+			if self.lifetimer <= 0 then
+				self.object:remove()
+			end
+		end,
+		
+		get_staticdata = function(self)
+			local tmp = {
+				lifetimer = self.lifetimer,
+			}
+			return minetest.serialize(tmp)
 		end,
 		
 		on_punch = function(self, hitter)
