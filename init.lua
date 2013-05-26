@@ -192,15 +192,16 @@ mobs:register_mob("mobs:sheep", {
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
 		if item:get_name() == "farming:wheat" then
-			clicker:set_wielded_item(item)
 			if not self.tamed then
 				if not minetest.setting_getbool("creative_mode") then
 					item:take_item()
+					clicker:set_wielded_item(item)
 				end
 				self.tamed = true
 			elseif self.naked then
 				if not minetest.setting_getbool("creative_mode") then
 					item:take_item()
+					clicker:set_wielded_item(item)
 				end
 				self.food = (self.food or 0) + 1
 				if self.food >= 8 then
