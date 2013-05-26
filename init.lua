@@ -205,6 +205,7 @@ mobs:register_mob("mobs:sheep", {
 				end
 				self.food = (self.food or 0) + 1
 				if self.food >= 8 then
+					self.food = 0
 					self.naked = false
 					self.object:set_properties({
 						textures = {"mobs_sheep.png"},
@@ -214,7 +215,7 @@ mobs:register_mob("mobs:sheep", {
 			end
 			return
 		end
-		if clicker:get_inventory() then
+		if clicker:get_inventory() and not self.naked then
 			self.naked = true
 			if minetest.registered_items["wool:white"] then
 				clicker:get_inventory():add_item("main", ItemStack("wool:white "..math.random(1,3)))
