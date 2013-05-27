@@ -248,22 +248,16 @@ function mobs:register_mob(name, def)
 			
 			if self.following and self.following:is_player() then
 				if self.following:get_wielded_item():get_name() ~= self.follow then
-					self.state = "stand"
-					self.set_velocity(self, 0)
 					self.following = nil
 					self.v_start = false
-					self:set_animation("stand")
 					return
 				end
 				local s = self.object:getpos()
 				local p = self.following:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 				if dist > self.view_range then
-					self.state = "stand"
-					self.set_velocity(self, 0)
 					self.following = nil
 					self.v_start = false
-					self:set_animation("stand")
 					return
 				end
 				
