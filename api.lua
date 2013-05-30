@@ -117,7 +117,7 @@ function mobs:register_mob(name, def)
 			end
 			
 			self.lifetimer = self.lifetimer - dtime
-			if self.lifetimer <= 0 and not tamed then
+			if self.lifetimer <= 0 and not self.tamed then
 				local player_count = 0
 				for _,obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), 20)) do
 					if obj:is_player() then
@@ -447,7 +447,7 @@ function mobs:register_mob(name, def)
 					self.tamed = tmp.tamed
 				end
 			end
-			if self.lifetimer <= 0 then
+			if self.lifetimer <= 0 and not self.tamed then
 				self.object:remove()
 			end
 		end,
