@@ -476,7 +476,7 @@ function mobs:register_mob(name, def)
 end
 
 mobs.spawning_mobs = {}
-function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
+function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height, spawn_func)
 	mobs.spawning_mobs[name] = true
 	minetest.register_abm({
 		nodenames = nodes,
@@ -508,6 +508,9 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 			end
 			pos.y = pos.y+1
 			if minetest.env:get_node(pos).name ~= "air" then
+				return
+			end
+			if spawn_func and not spawn_func(pos, node) then
 				return
 			end
 			
