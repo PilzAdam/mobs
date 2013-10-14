@@ -221,17 +221,9 @@ function mobs:register_mob(name, def)
 					local p = player:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 					if dist < self.view_range then
-						if self.attack.dist then
-							if self.attack.dist < dist then
-								self.state = "attack"
-								self.attack.player = player
-								self.attack.dist = dist
-							end
-						else
-							self.state = "attack"
-							self.attack.player = player
-							self.attack.dist = dist
-						end
+						self.state = "attack"
+						self.attack.player = player
+						self.attack.dist = dist
 					end
 				end
 			end
