@@ -1,4 +1,10 @@
 mobs = {}
+function mobs.jump(object)
+	local v = object:getvelocity()
+	v.y = 5
+	object:setvelocity(v)
+end
+
 function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
 		hp_max = def.hp_max,
@@ -228,7 +234,7 @@ function mobs:register_mob(name, def)
 				end
 			end
 			
-			if self.follow ~= "" and not self.following then
+			if self.follow and self.follow ~= "" and not self.following then
 				for _,player in pairs(minetest.get_connected_players()) do
 					local s = self.object:getpos()
 					local p = player:getpos()
@@ -266,9 +272,7 @@ function mobs:register_mob(name, def)
 								self.set_velocity(self, self.walk_velocity)
 							else
 								if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-									local v = self.object:getvelocity()
-									v.y = 5
-									self.object:setvelocity(v)
+									mobs.jump(self.object)
 								end
 								self.set_velocity(self, self.walk_velocity)
 							end
@@ -299,9 +303,7 @@ function mobs:register_mob(name, def)
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 				end
 				if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-					local v = self.object:getvelocity()
-					v.y = 5
-					self.object:setvelocity(v)
+					mobs.jump(self.object)
 				end
 				self:set_animation("walk")
 				self.set_velocity(self, self.walk_velocity)
@@ -345,9 +347,7 @@ function mobs:register_mob(name, def)
 						self.set_velocity(self, self.run_velocity)
 					else
 						if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-							local v = self.object:getvelocity()
-							v.y = 5
-							self.object:setvelocity(v)
+							mobs.jump(self.object)
 						end
 						self.set_velocity(self, self.run_velocity)
 					end
