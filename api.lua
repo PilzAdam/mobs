@@ -1,8 +1,8 @@
 mobs = {}
-function mobs.jump(object)
-	local v = object:getvelocity()
+function mobs:jump()
+	local v = self.object:getvelocity()
 	v.y = 5
-	object:setvelocity(v)
+	self.object:setvelocity(v)
 end
 
 function mobs:register_mob(name, def)
@@ -34,7 +34,7 @@ function mobs:register_mob(name, def)
 		sounds = def.sounds,
 		animation = def.animation,
 		follow = def.follow,
-		jump = def.jump or true,
+		jump = def.jump or mobs.jump,
 		
 		timer = 0,
 		env_damage_timer = 0, -- only if state = "attack"
@@ -279,7 +279,7 @@ function mobs:register_mob(name, def)
 								self.set_velocity(self, self.walk_velocity)
 							else
 								if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-									mobs.jump(self.object)
+									self:jump()
 								end
 								self.set_velocity(self, self.walk_velocity)
 							end
@@ -310,7 +310,7 @@ function mobs:register_mob(name, def)
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 				end
 				if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-					mobs.jump(self.object)
+					self:jump()
 				end
 				self:set_animation("walk")
 				self.set_velocity(self, self.walk_velocity)
@@ -355,7 +355,7 @@ function mobs:register_mob(name, def)
 						self.set_velocity(self, self.run_velocity)
 					else
 						if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-							mobs.jump(self.object)
+							self:jump()
 						end
 						self.set_velocity(self, self.run_velocity)
 					end
