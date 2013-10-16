@@ -227,9 +227,16 @@ function mobs:register_mob(name, def)
 					local p = player:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 					if dist < self.view_range then
-						self.state = "attack"
-						self.attack.player = player
-						self.attack.dist = dist
+						if self.attack.dist then
+							if dist < self.attack.dist then
+								self.attack.player = player
+								self.attack.dist = dist
+							end
+						else
+							self.state = "attack"
+							self.attack.player = player
+							self.attack.dist = dist
+						end
 					end
 				end
 			end
@@ -316,6 +323,7 @@ function mobs:register_mob(name, def)
 				if not self.attack.player or not self.attack.player:is_player() then
 					self.state = "stand"
 					self:set_animation("stand")
+					self.attack = {player=nil, dist=nil}
 					return
 				end
 				local s = self.object:getpos()
@@ -371,6 +379,7 @@ function mobs:register_mob(name, def)
 				if not self.attack.player or not self.attack.player:is_player() then
 					self.state = "stand"
 					self:set_animation("stand")
+					self.attack = {player=nil, dist=nil}
 					return
 				end
 				local s = self.object:getpos()
@@ -425,6 +434,7 @@ function mobs:register_mob(name, def)
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y=-10, z=0})
 			self.state = "stand"
+			self.attack = {player = nil, dist = nil}
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
 			if self.type == "monster" and minetest.setting_getbool("only_peaceful_mobs") then
