@@ -152,7 +152,14 @@ function mobs:register_mob(name, def)
 						local damage = d-5
 						self.object:set_hp(self.object:get_hp()-damage)
 						if self.object:get_hp() == 0 then
+							if self.sounds and self.sounds.die then
+								minetest.sound_play(self.sounds.die, {object = self.object})
+							end
 							self.object:remove()
+						else
+							if self.sounds and self.sounds.damage then
+								minetest.sound_play(self.sounds.damage, {object = self.object})
+							end
 						end
 					end
 					self.old_y = self.object:getpos().y
@@ -184,7 +191,14 @@ function mobs:register_mob(name, def)
 				then
 					self.object:set_hp(self.object:get_hp()-self.light_damage)
 					if self.object:get_hp() == 0 then
+						if self.sounds and self.sounds.die then
+							minetest.sound_play(self.sounds.die, {object = self.object})
+						end
 						self.object:remove()
+					else
+						if self.sounds and self.sounds.damage then
+							minetest.sound_play(self.sounds.damage, {object = self.object})
+						end
 					end
 				end
 				
@@ -193,7 +207,14 @@ function mobs:register_mob(name, def)
 				then
 					self.object:set_hp(self.object:get_hp()-self.water_damage)
 					if self.object:get_hp() == 0 then
+						if self.sounds and self.sounds.die then
+							minetest.sound_play(self.sounds.die, {object = self.object})
+						end
 						self.object:remove()
+					else
+						if self.sounds and self.sounds.damage then
+							minetest.sound_play(self.sounds.damage, {object = self.object})
+						end
 					end
 				end
 				
@@ -202,7 +223,14 @@ function mobs:register_mob(name, def)
 				then
 					self.object:set_hp(self.object:get_hp()-self.lava_damage)
 					if self.object:get_hp() == 0 then
+						if self.sounds and self.sounds.die then
+							minetest.sound_play(self.sounds.die, {object = self.object})
+						end
 						self.object:remove()
+					else
+						if self.sounds and self.sounds.damage then
+							minetest.sound_play(self.sounds.damage, {object = self.object})
+						end
 					end
 				end
 			end
@@ -469,6 +497,13 @@ function mobs:register_mob(name, def)
 							hitter:get_inventory():add_item("main", ItemStack(drop.name.." "..math.random(drop.min, drop.max)))
 						end
 					end
+				end
+				if self.sounds and self.sounds.die then
+					minetest.sound_play(self.sounds.die, {object = self.object})
+				end
+			else
+				if self.sounds and self.sounds.damage then
+					minetest.sound_play(self.sounds.damage, {object = self.object})
 				end
 			end
 		end,
