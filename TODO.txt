@@ -1,0 +1,3 @@
+this file was added by farooghkz.
+TODO list:
+- better images for eggs

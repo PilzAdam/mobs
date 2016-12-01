@@ -199,12 +199,12 @@ mobs:register_mob("mobs:sheep", {
 		walk_start = 81,
 		walk_end = 100,
 	},
-	follow = "farming:wheat",
+	follow = {"farming:wheat", "farming:bread"},
 	view_range = 5,
 	
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
-		if item:get_name() == "farming:wheat" then
+		if mobs:is_in_tbl({"farming:wheat", "farming:bread"}, item:get_name()) then
 			if not self.tamed then
 				if not minetest.setting_getbool("creative_mode") then
 					item:take_item()
@@ -242,6 +242,7 @@ mobs:register_mob("mobs:sheep", {
 })
 mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
 
+
 minetest.register_craftitem("mobs:meat_raw", {
 	description = "Raw Meat",
 	inventory_image = "mobs_meat_raw.png",
@@ -275,6 +276,7 @@ mobs:register_mob("mobs:rat", {
 	water_damage = 0,
 	lava_damage = 1,
 	light_damage = 0,
+	view_range = 3,
 	
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
@@ -297,6 +299,87 @@ minetest.register_craftitem("mobs:rat", {
 		return itemstack
 	end,
 })
+
+minetest.register_craftitem("mobs:sheep_egg", {
+	description = "Sheep Egg",
+	inventory_image = "mobs_sheep_egg.png",
+	
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above then
+			minetest.env:add_entity(pointed_thing.above, "mobs:sheep")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})
+
+minetest.register_craftitem("mobs:dirt_monster_egg", {
+	description = "Dirt Monster Egg",
+	inventory_image = "mobs_dirt_monster_egg.png",
+	
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above then
+			minetest.env:add_entity(pointed_thing.above, "mobs:dirt_monster")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})
+
+
+minetest.register_craftitem("mobs:sand_monster_egg", {
+	description = "Sand Monster Egg",
+	inventory_image = "mobs_sand_monster_egg.png",
+	
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above then
+			minetest.env:add_entity(pointed_thing.above, "mobs:sand_monster")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})
+
+minetest.register_craftitem("mobs:stone_monster_egg", {
+	description = "Stone Monster Egg",
+	inventory_image = "mobs_stone_monster_egg.png",
+	
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above then
+			minetest.env:add_entity(pointed_thing.above, "mobs:stone_monster")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})
+
+
+minetest.register_craftitem("mobs:dungeon_master_egg", {
+	description = "Dungeon Master Egg",
+	inventory_image = "mobs_dungeon_master_egg.png",
+	
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above then
+			minetest.env:add_entity(pointed_thing.above, "mobs:dungeon_master")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})
+
+minetest.register_craftitem("mobs:oerkki_egg", {
+	description = "Oerkki Egg",
+	inventory_image = "mobs_oerkki_egg.png",
+	
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above then
+			minetest.env:add_entity(pointed_thing.above, "mobs:oerkki")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})
+
 	
 minetest.register_craftitem("mobs:rat_cooked", {
 	description = "Cooked Rat",

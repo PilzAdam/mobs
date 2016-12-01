@@ -1,4 +1,17 @@
 mobs = {}
+
+function mobs:is_in_tbl(a_tbl, a_val)
+    if not a_tbl then
+        return false
+    end
+    for key, val in ipairs(a_tbl) do
+        if val == a_val then
+            return true
+        end
+    end
+    return false
+end
+
 function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
 		hp_max = def.hp_max,
@@ -117,6 +130,10 @@ function mobs:register_mob(name, def)
 				self.object:remove()
 			end
 			
+            if self.hp_max == 5  and self.type == "animal" then
+               -- TODO: if its sheep, it will eat grass!
+            end
+
 			self.lifetimer = self.lifetimer - dtime
 			if self.lifetimer <= 0 and not self.tamed then
 				local player_count = 0
@@ -248,7 +265,8 @@ function mobs:register_mob(name, def)
 			end
 			
 			if self.following and self.following:is_player() then
-				if self.following:get_wielded_item():get_name() ~= self.follow then
+                item_name = self.following:get_wielded_item():get_name()
+				if not mobs:is_in_tbl(self.follow, item_name) then
 					self.following = nil
 					self.v_start = false
 				else
