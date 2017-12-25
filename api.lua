@@ -1,4 +1,17 @@
 mobs = {}
+
+local function handle_drops(self, hitter)
+	if not self.drops_handled and hitter and hitter:is_player() and hitter:get_inventory() then
+		for _,drop in ipairs(self.drops) do
+			if math.random(1, drop.chance) == 1 then
+				hitter:get_inventory():add_item("main", ItemStack(drop.name.." "..math.random(drop.min, drop.max)))
+			end
+		end
+		-- prevent double handling
+		self.drops_handled = true
+	end
+end
+
 function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
 		hp_max = def.hp_max,
@@ -461,16 +474,15 @@ function mobs:register_mob(name, def)
 			return minetest.serialize(tmp)
 		end,
 		
-		on_punch = function(self, hitter)
-			if self.object:get_hp() <= 0 then
-				if hitter and hitter:is_player() and hitter:get_inventory() then
-					for _,drop in ipairs(self.drops) do
-						if math.random(1, drop.chance) == 1 then
-							hitter:get_inventory():add_item("main", ItemStack(drop.name.." "..math.random(drop.min, drop.max)))
-						end
-					end
-				end
+		on_punch = function(self, hitter, tflp, cap, dir, damage)
+			local health = self.object:get_hp() - (damage or 0)
+			if health <= 0 then
+				handle_drops(self, hitter)
 			end
+		end,
+		
+		on_death = function(self, killer)
+			handle_drops(self, killer)
 		end,
 		
 	})
